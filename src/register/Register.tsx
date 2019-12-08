@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { useSelector, useDispatch } from "react-redux";
 import { postRegistration } from './registerStore.tsx';
-import { Grid } from '@material-ui/core';
+import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -23,16 +23,21 @@ const useStyles = makeStyles({
     formContainer: {
         margin: '0 auto',
         width:' 90%',
-      justifyContent: 'center',
-  },
-  submitButton: {
-      width: '30%',
-  }
+    },
+    submitButton: {
+        width: '30%',
+    },
+    usernameContainer: {
+        display: 'flex',
+        alignItems: 'center',
+    }
 });
 
 function Register() {
     const [username, setUsername] = useState<String>('');
     const [password, setPassword] = useState<String>('');
+    const [anonymousChecked, setAnonymousChecked] = useState<boolean>(false);
+    const [email, setEmail] = useState<String>('');
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -52,18 +57,38 @@ function Register() {
                     spacing={3}
                     className={classes.formContainer}
                 >
-                    <Grid item xs={12}>
+                    <Grid item xs={12} className={classes.usernameContainer}>
                         <TextField
-                            required
                             id="standard-required"
-                            label="Required"
+                            label="Username - optional"
                             className={classes.textField}
                             margin="normal"
                             value={username}
                             onChange={ event => setUsername(event.target.value)}
                         />
-                        </Grid>
-                        <Grid item xs={12}>
+                          <FormControlLabel
+                                control={
+                                    <Checkbox
+                                    checked={anonymousChecked}
+                                    onChange={event => setAnonymousChecked(event.target.checked)}
+                                    value="Anonymous"
+                                    />
+                                }
+                                label="Anonymous"
+                            />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            required
+                            id="standard-required"
+                            label="e-Mail"
+                            className={classes.textField}
+                            margin="normal"
+                            value={email}
+                            onChange={ event => setEmail(event.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
                         <TextField
                             id="standard-password-input"
                             label="Password"
@@ -74,8 +99,8 @@ function Register() {
                             value={password}
                             onChange={ event => setPassword(event.target.value)}
                         />
-                         </Grid>
-                         <Grid item xs={12}>
+                    </Grid>
+                    <Grid item xs={12}>
                         <Button
                             variant="contained"
                             color="primary"
