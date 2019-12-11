@@ -1,13 +1,13 @@
-import React,  { useState, useCallback } from 'react';
+import React,  { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 // @ts-ignore
 import { loginUser } from './loginStore.tsx';
-import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -40,7 +40,7 @@ function Register() {
     const classes = useStyles({});
     const dispatch = useDispatch();
 
-    const submitLogin = (event) => {
+    const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(loginUser(email, password));
     }

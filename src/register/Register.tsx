@@ -1,4 +1,4 @@
-import React,  { useState, useCallback } from 'react';
+import React,  { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -42,7 +42,7 @@ function Register() {
     const classes = useStyles({});
     const dispatch = useDispatch();
 
-    const submitRegister = (event) => {
+    const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(postRegistration(username, email, password));
     }
