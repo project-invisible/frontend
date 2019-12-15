@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
-import { Map, Marker, Popup, TileLayer, Pane, ZoomControl } from 'react-leaflet'
+import React, { Component, useEffect } from 'react'
+import { Map, Marker, Popup, TileLayer, Pane, ZoomControl, LayerGroup, Circle } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
 import { makeStyles } from '@material-ui/core/styles';
 import SearchBar from './SearchBar.tsx';
 import Control from 'react-leaflet-control';
+import SwitchLayer from './SwitchLayer.tsx';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
     root: {
@@ -11,6 +13,8 @@ const useStyles = makeStyles({
         minHeight: '100%',
     },
   });
+
+  const center: LatLngExpression = [52.505, -0.09];
 
 export default function HomeMap() {
   const classes = useStyles({});
@@ -24,6 +28,8 @@ export default function HomeMap() {
   }
   const position: LatLngExpression = [mapProps.lat, mapProps.lng]
 
+  const markers: Array<LatLngExpression> = useSelector(state => state.switchLayerStore.mapMarker);
+
     return (
       <Map center={position} zoom={mapProps.zoom} className={classes.root} zoomControl={false} >
         <ZoomControl position="bottomright"/>
@@ -34,11 +40,29 @@ export default function HomeMap() {
         <Control position="topleft" >
             <SearchBar />
         </Control>
+        <Control position="topleft" >
+            <SwitchLayer />
+        </Control>
         <Marker position={position}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
+        <LayerGroup>
+          {
+            markers ?
+            markers.map( marker => {
+              return (
+                <Marker position={marker}>
+                  <Popup>
+                    A pretty CSS3 popup. <br /> Easily customizable.
+                  </Popup>
+                </Marker>
+              )
+            })
+            : <div/>
+          }
+        </LayerGroup>
       </Map>
     )
 }
