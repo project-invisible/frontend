@@ -6,6 +6,9 @@ import { useDispatch } from 'react-redux';
 import { getSelectedLayerData } from './SwitchLayerReducer.ts';
 import { useSelector } from 'react-redux';
 import { LatLngExpression } from 'leaflet';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,10 +29,16 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function SwitchLayer() {
   const classes = useStyles({});
   const [uniChecked, setUniChecked] = useState<boolean>(false);
+  const [displaySubCategories, setDisplaySubCategories] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUniChecked(event.target.checked);
+    dispatch(getSelectedLayerData(event.target.checked));
+  };
+
+  const toggleSubCategories = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplaySubCategories(!displaySubCategories);
     dispatch(getSelectedLayerData(event.target.checked));
   };
 
@@ -48,7 +57,30 @@ export default function SwitchLayer() {
               <Typography className={classes.layerCheck}>
                 Higher education institutions
               </Typography>
+              <div onClick={toggleSubCategories}>
+                <IconButton >
+                  {
+                    displaySubCategories ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />
+                  }   
+                </IconButton>
+              </div>
           </div>
+          {
+            displaySubCategories && (
+              <div className={classes.layerContainer}>
+                <Checkbox
+                      checked={uniChecked}
+                      onChange={handleChange}
+                      className={classes.layerCheck}
+                      value="primary"
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
+                  />
+                  <Typography className={classes.layerCheck}>
+                    Option 1
+                  </Typography>
+              </div>
+            )
+          }
       </div>
     </Paper>);
 }
