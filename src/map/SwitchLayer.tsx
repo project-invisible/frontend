@@ -1,7 +1,7 @@
-import React,  { useState, useEffect, useRef } from 'react';
+import React,  { useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox, Typography } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { getSelectedLayerData } from './SwitchLayerReducer.ts';
 import { useSelector } from 'react-redux';
@@ -10,38 +10,44 @@ import { LatLngExpression } from 'leaflet';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
       root: {
-          height: '100px',
+          height: '100%',
           width: '300px',
+      },
+      layerCheck: {
+        display: 'inline-block',
+      },
+      layerContainer: {
+        display: 'flex',
+        alignItems: 'center',
       }
   }),
 );
 
 export default function SwitchLayer() {
   const classes = useStyles({});
-  const [test1Checked, setTest1Checked] = useState<boolean>(false);
+  const [uniChecked, setUniChecked] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTest1Checked(event.target.checked);
+    setUniChecked(event.target.checked);
     dispatch(getSelectedLayerData(event.target.checked));
   };
 
   const markers: Array<LatLngExpression> = useSelector(state => state.switchLayerStore.mapMarker);
-  
-  useEffect(() => {
-    console.log({markers});
-  });
-  
 
   return (<Paper className={classes.root}>
       <div>
-          <div>
-          <Checkbox
-                checked={test1Checked}
-                onChange={handleChange}
-                value="primary"
-                inputProps={{ 'aria-label': 'primary checkbox' }}
-            />
+          <div className={classes.layerContainer}>
+            <Checkbox
+                  checked={uniChecked}
+                  onChange={handleChange}
+                  className={classes.layerCheck}
+                  value="primary"
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+              />
+              <Typography className={classes.layerCheck}>
+                Higher education institutions
+              </Typography>
           </div>
       </div>
     </Paper>);

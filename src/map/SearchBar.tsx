@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     result: {
       overflowY: 'scroll',
-      height: 'calc(100vh - 10vh)',
+      height: 'calc(100vh - 20vh)',
     },
   }),
 );
@@ -97,7 +97,11 @@ export default function SearchBar() {
 
   const handleClick = event => {
     event.preventDefault();
-    setSearchResults(dummySearchResults);
+    if( searchResults.length === 0 ) {
+      setSearchResults(dummySearchResults);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   const handleClose = () => {
@@ -106,24 +110,6 @@ export default function SearchBar() {
   const search = (
     <Paper ref={refContainer}>
       <form onSubmit={handleClick} className={classes.root}>
-          <IconButton
-            className={classes.iconButton}
-            aria-label="menu"
-            aria-haspopup="true"
-            onClick={handleClick}>
-              <MenuIcon />
-          </IconButton>
-          <Menu
-              id="simple-menu"
-              keepMounted
-              open={menuOpen}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-          >
-              <MenuItem onClick={handleClick}>Profile</MenuItem>
-              <MenuItem onClick={handleClick}>My account</MenuItem>
-              <MenuItem onClick={handleClick}>Logout</MenuItem>
-          </Menu>
           <InputBase
               className={classes.input}
               placeholder="Search IN_VISIBLE"
