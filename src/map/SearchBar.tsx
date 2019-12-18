@@ -7,7 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import { Menu, MenuItem } from '@material-ui/core';
 import { SearchResult } from './../types/SearchResult';
-import Result from './SearchResult.tsx';
+import Result from './SearchResult';
 import { DomEvent } from 'leaflet'
 
 const useStyles = makeStyles((theme: Theme) =>

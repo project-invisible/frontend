@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from "react-redux";
 // @ts-ignore
-import { loginUser } from './loginStore.tsx';
+import { loginUser } from './loginStore';
 import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles({

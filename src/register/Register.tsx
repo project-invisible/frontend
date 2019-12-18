@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { useDispatch } from "react-redux";
 // @ts-ignore
-import { postRegistration } from './registerStore.tsx';
+import { postRegistration } from './registerStore';
 import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
 
 const useStyles = makeStyles({

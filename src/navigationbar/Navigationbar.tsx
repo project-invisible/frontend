@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Navigationbar() {
-  const classes = useStyles();
+  const classes = useStyles({});
 
   return (
     <AppBar position="static">
