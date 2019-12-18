@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { useSelector, useDispatch } from "react-redux";
-import { postRegistration } from './registerStore.tsx';
+import { postRegistration } from './registerStore.ts';
 import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -43,7 +43,7 @@ function Register() {
 
     const submitRegister = (event) => {
         event.preventDefault();
-        dispatch(postRegistration(username, password));
+        dispatch(postRegistration(email, username, password));
     }
 
     return (
