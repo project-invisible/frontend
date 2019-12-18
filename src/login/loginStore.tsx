@@ -1,7 +1,7 @@
 
 import { createStore } from 'redux';
 
-export const REGISTER = 'REGISTER'
+export const LOGIN = 'LOGIN'
 
 const initialState = {
   };
@@ -9,9 +9,9 @@ const initialState = {
   /**
    * Reducer
    */
-  const registerStore = (state = initialState, action) => {
+  const loginStore = (state = initialState, action) => {
     switch (action.type) {
-      case REGISTER:
+      case LOGIN:
         return state;
     }
     return state;
@@ -20,14 +20,14 @@ const initialState = {
   /**
  * Actions
  */
-export const postRegistration = (username: String, password: String) => async (dispatch, getState) => {
+export const loginUser = (username: String, password: String) => async (dispatch, getState) => {
     try {
         // no backend yet
     //   const response = await fetch(`localhost:3000/api/register`);
        const jwtToken = "test";
         console.log("Token: ", jwtToken);
         return {
-            type: REGISTER,
+            type: LOGIN,
             jwtToken: jwtToken,
         }
     } catch (error) {
@@ -39,4 +39,4 @@ export const postRegistration = (username: String, password: String) => async (d
   /**
    * Store
    */
-  export default registerStore;
+  export default loginStore;

@@ -20,7 +20,7 @@ const initialState = {
   /**
  * Actions
  */
-export const postRegistration = (username: String, password: String) => async (dispatch, getState) => {
+export const postRegistration = (username: String, email: String, password: String) => async (dispatch, getState) => {
     try {
         // no backend yet
     //   const response = await fetch(`localhost:3000/api/register`);

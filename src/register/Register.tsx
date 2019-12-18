@@ -1,11 +1,12 @@
-import React,  { useState, useCallback } from 'react';
+import React,  { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { useSelector, useDispatch } from "react-redux";
-import { postRegistration } from './registerStore.tsx';
+import { useDispatch } from "react-redux";
+// @ts-ignore
+import { postRegistration } from './registerStore';
 import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -38,12 +39,12 @@ function Register() {
     const [password, setPassword] = useState<String>('');
     const [anonymousChecked, setAnonymousChecked] = useState<boolean>(false);
     const [email, setEmail] = useState<String>('');
-    const classes = useStyles();
+    const classes = useStyles({});
     const dispatch = useDispatch();
 
-    const submitRegister = (event) => {
+    const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(postRegistration(username, password));
+        dispatch(postRegistration(username, email, password));
     }
 
     return (

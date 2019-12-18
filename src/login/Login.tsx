@@ -1,12 +1,13 @@
-import React,  { useState, useCallback } from 'react';
+import React,  { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { useSelector, useDispatch } from "react-redux";
-import { postRegistration } from './registerStore.tsx';
-import { Grid, Checkbox, FormControlLabel } from '@material-ui/core';
+import { useDispatch } from "react-redux";
+// @ts-ignore
+import { loginUser } from './loginStore';
+import { Grid } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -34,54 +35,32 @@ const useStyles = makeStyles({
 });
 
 function Register() {
-    const [username, setUsername] = useState<String>('');
-    const [password, setPassword] = useState<String>('');
-    const [anonymousChecked, setAnonymousChecked] = useState<boolean>(false);
     const [email, setEmail] = useState<String>('');
-    const classes = useStyles();
+    const [password, setPassword] = useState<String>('');
+    const classes = useStyles({});
     const dispatch = useDispatch();
 
-    const submitRegister = (event) => {
+    const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        dispatch(postRegistration(username, password));
+        dispatch(loginUser(email, password));
     }
 
     return (
         <Paper className={classes.root}>
             <Typography variant="h5" component="h3">
-                Register for IN_VISIBLE
+                Log in to IN_VISIBLE
             </Typography>
-            <form className={classes.container} noValidate autoComplete="off" onSubmit={event => submitRegister(event)}>
+            <form className={classes.container} noValidate autoComplete="off" onSubmit={event => submitLogin(event)}>
                 <Grid 
                     container
                     spacing={3}
                     className={classes.formContainer}
                 >
-                    <Grid item xs={12} className={classes.usernameContainer}>
-                        <TextField
-                            id="standard-required"
-                            label="Username - optional"
-                            className={classes.textField}
-                            margin="normal"
-                            value={username}
-                            onChange={ event => setUsername(event.target.value)}
-                        />
-                          <FormControlLabel
-                                control={
-                                    <Checkbox
-                                    checked={anonymousChecked}
-                                    onChange={event => setAnonymousChecked(event.target.checked)}
-                                    value="Anonymous"
-                                    />
-                                }
-                                label="Anonymous"
-                            />
-                    </Grid>
                     <Grid item xs={12}>
                         <TextField
                             required
                             id="standard-required"
-                            label="e-Mail"
+                            label="Please enter e-Mail or Username"
                             className={classes.textField}
                             margin="normal"
                             value={email}
@@ -107,7 +86,7 @@ function Register() {
                             type="submit"
                             className={classes.submitButton}
                         >
-                            Register
+                            Login
                         </Button>
                     </Grid>
                 </Grid>

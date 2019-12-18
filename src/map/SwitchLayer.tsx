@@ -3,7 +3,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Checkbox, Typography } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import { getSelectedLayerData } from './SwitchLayerReducer.ts';
+import { getSelectedLayerData } from './SwitchLayerReducer';
 import { useSelector } from 'react-redux';
 import { LatLngExpression } from 'leaflet';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -37,12 +37,12 @@ export default function SwitchLayer() {
     dispatch(getSelectedLayerData(event.target.checked));
   };
 
-  const toggleSubCategories = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const toggleSubCategories = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setDisplaySubCategories(!displaySubCategories);
-    dispatch(getSelectedLayerData(event.target.checked));
+    dispatch(getSelectedLayerData(displaySubCategories));
   };
 
-  const markers: Array<LatLngExpression> = useSelector(state => state.switchLayerStore.mapMarker);
+  const markers: Array<LatLngExpression> = useSelector((state: any) => state.switchLayerStore.mapMarker);
 
   return (<Paper className={classes.root}>
       <div>
