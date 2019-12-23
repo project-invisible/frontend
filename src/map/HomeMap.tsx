@@ -6,7 +6,6 @@ import SearchBar from './SearchBar';
 import Control from 'react-leaflet-control';
 import SwitchLayer from './SwitchLayer';
 import { useSelector } from 'react-redux';
-import Navigationbar from '../navigationbar/Navigationbar';
 
 const useStyles = makeStyles({
     root: {
@@ -33,7 +32,6 @@ export default function HomeMap() {
 
     return (
       <>
-        <Navigationbar />
         <Map center={position} zoom={mapProps.zoom} className={classes.root} zoomControl={false} >
           <ZoomControl position="bottomright"/>
           <TileLayer
