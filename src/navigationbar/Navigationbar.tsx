@@ -8,6 +8,7 @@ import {
   Button
 } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
+import { createBrowserHistory } from "history";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,6 +22,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const history = createBrowserHistory({forceRefresh:true});
+
 function Navigationbar() {
   const classes = useStyles({});
 
@@ -30,10 +33,10 @@ function Navigationbar() {
       <Typography variant="h6" className={classes.title}>
       IN_VISIBLE
     </Typography>
-        <Button color="inherit">Karte</Button>
+        <Button color="inherit" onClick={()=> history.push('/')}>Map</Button>
         <Button color="inherit">Forum</Button>
         <Button color="inherit">Events</Button>
-        <Button color="inherit">Code of Conduct</Button>
+        <Button color="inherit" onClick={() => history.push('/codeofconduct')}>Code of Conduct</Button>
         <Button color="inherit">FAQ</Button>
         <Button color="inherit">Feedback</Button>
         <Button color="inherit">Admin</Button>
