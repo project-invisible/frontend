@@ -1,11 +1,12 @@
 import React, { Component, useEffect } from 'react'
-import { Map, Marker, Popup, TileLayer, Pane, ZoomControl, LayerGroup, Circle } from 'react-leaflet'
+import { Map, Marker, Popup, TileLayer, Pane, ZoomControl, LayerGroup, Circle, useLeaflet } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
 import { makeStyles } from '@material-ui/core/styles';
 import SearchBar from './SearchBar';
 import Control from 'react-leaflet-control';
 import SwitchLayer from './SwitchLayer';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import PointsOfInterest from './PointOfInterests';
 
 const useStyles = makeStyles({
     root: {
@@ -18,16 +19,16 @@ const useStyles = makeStyles({
 
 export default function HomeMap() {
   const classes = useStyles({});
+  const dispatch = useDispatch();
+
   const mapProps = {
-    lat: 51.505,
-    lng: -0.09,
-    zoom: 13,
-  }
-  const zoomControl = {
-      position: "bottomright",
+    lat: 52.5137,
+    lng: 13.322,
+    zoom: 8,
   }
   const position: LatLngExpression = [mapProps.lat, mapProps.lng]
 
+  const { map } = useLeaflet();
   const markers: Array<LatLngExpression> = useSelector((state: any) => state.switchLayerStore.mapMarker);
 
     return (
@@ -64,6 +65,7 @@ export default function HomeMap() {
               : <div/>
             }
           </LayerGroup>
+          <PointsOfInterest />
         </Map>
       </>
     )
