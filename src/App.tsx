@@ -15,12 +15,10 @@ function App() {
   return (
     <Router history={history}>
       <Switch>
-      <Route exact path="/login" component={() => <div />} />
-      <Route path="/register" component={() => <Register />} />        
-      <Route path="/" component={() => <Navigationbar />} />
+        <Route exact path="/login" component={() => <div />} />
+        <Route exact path="/register" component={() => <Register />} />        
+        <Route path="/" component={() => <Navigationbar />} />
       </Switch>
-        <Route path="/login" component={() => <Login />} />
-        <Route path="/register" component={() => <Register />} />
         <Route exact path="/" component={() => <HomeMap />} />
         <Route path="/codeofconduct" component={() => <CodeOfConduct />} />
         <Route path="/faq" component={() => <Faq />} />
