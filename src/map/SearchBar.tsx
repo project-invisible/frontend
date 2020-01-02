@@ -9,7 +9,9 @@ import { Menu, MenuItem } from '@material-ui/core';
 import { SearchResult } from './../types/SearchResult';
 import Result from './SearchResult';
 import { DomEvent } from 'leaflet'
-import { TextField } from '@material-ui/core/TextField';
+import { useDispatch, useSelector } from 'react-redux';
+import { searchPOI } from './SearchReducer';
+import TextField from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,55 +40,57 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const dummySearchResults: Array<SearchResult> = [
-  {
-    name: "First result",
-    rating: 4.7,
-    street: "Resultstreet",
-    postal: 12334,
-  },
-  {
-    name: "Second result",
-    rating: 2.3,
-    street: "Another street 21",
-    postal: 25466,
-  },
-  {
-    name: "Second result",
-    rating: 2.3,
-    street: "Another street 21",
-    postal: 25466,
-  },
-  {
-    name: "Second result",
-    rating: 2.3,
-    street: "Another street 21",
-    postal: 25466,
-  },
-  {
-    name: "Second result",
-    rating: 2.3,
-    street: "Another street 21",
-    postal: 25466,
-  },
-  {
-    name: "Second result",
-    rating: 2.3,
-    street: "Another street 21",
-    postal: 25466,
-  }
-]
+// const dummySearchResults: Array<SearchResult> = [
+//   {
+//     name: "First result",
+//     rating: 4.7,
+//     street: "Resultstreet",
+//     postal: 12334,
+//   },
+//   {
+//     name: "Second result",
+//     rating: 2.3,
+//     street: "Another street 21",
+//     postal: 25466,
+//   },
+//   {
+//     name: "Second result",
+//     rating: 2.3,
+//     street: "Another street 21",
+//     postal: 25466,
+//   },
+//   {
+//     name: "Second result",
+//     rating: 2.3,
+//     street: "Another street 21",
+//     postal: 25466,
+//   },
+//   {
+//     name: "Second result",
+//     rating: 2.3,
+//     street: "Another street 21",
+//     postal: 25466,
+//   },
+//   {
+//     name: "Second result",
+//     rating: 2.3,
+//     street: "Another street 21",
+//     postal: 25466,
+//   }
+// ]
 
 export default function SearchBar() {
   const classes = useStyles({});
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<String>('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [anchorEl, setAnchorEl] = useState(null);
-  const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
   let container = null;
 
   const open = Boolean(anchorEl);
   const inputEl = useRef(null);
+  const dispatch = useDispatch();
+  
+  const searchResults: Array<SearchResult> = useSelector((state: any) => state.searchStore.searchResults);
 
   const refContainer = (element) => {
     container = element;
@@ -99,11 +103,7 @@ export default function SearchBar() {
 
   const handleClick = event => {
     event.preventDefault();
-    if( searchResults.length === 0 ) {
-      setSearchResults(dummySearchResults);
-    } else {
-      setSearchResults([]);
-    }
+    dispatch(searchPOI(searchQuery));
   };
 
   const handleClose = () => {
