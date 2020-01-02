@@ -4,8 +4,10 @@ import Register from './register/Register';
 import Login from './login/Login';
 import { createBrowserHistory } from "history";
 import HomeMap from './map/HomeMap';
-import CodeOfConduct from './codeOfConduct/CodeOfConduct';
+import CodeOfConduct from './staticContent/CodeOfConduct';
 import Navigationbar from './navigationbar/Navigationbar';
+import Faq from './staticContent/Faq';
+import Mapathon from './staticContent/Mapathon';
 
 const history = createBrowserHistory();
 
@@ -21,6 +23,8 @@ function App() {
         <Route path="/register" component={() => <Register />} />
         <Route exact path="/" component={() => <HomeMap />} />
         <Route path="/codeofconduct" component={() => <CodeOfConduct />} />
+        <Route path="/faq" component={() => <Faq />} />
+        <Route path="/events" component={() => <Mapathon />} />
     </Router>
   );
 }
