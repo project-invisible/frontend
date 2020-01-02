@@ -9,6 +9,7 @@ import { Menu, MenuItem } from '@material-ui/core';
 import { SearchResult } from './../types/SearchResult';
 import Result from './SearchResult';
 import { DomEvent } from 'leaflet'
+import { TextField } from '@material-ui/core/TextField';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,6 +80,7 @@ const dummySearchResults: Array<SearchResult> = [
 export default function SearchBar() {
   const classes = useStyles({});
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<String>('');
   const [anchorEl, setAnchorEl] = useState(null);
   const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
   let container = null;
@@ -110,10 +112,12 @@ export default function SearchBar() {
   const search = (
     <Paper ref={refContainer}>
       <form onSubmit={handleClick} className={classes.root}>
-          <InputBase
+          <TextField
               className={classes.input}
               placeholder="Search IN_VISIBLE"
+              value={searchQuery}
               inputProps={{ 'aria-label': 'search invisible' }}
+              onChange={ event => setSearchQuery(event.target.value)}
           />
           <IconButton type="submit" className={classes.iconButton} aria-label="search">
               <SearchIcon />
