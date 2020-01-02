@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect } from "react";
 import {
   Map,
   Marker,
@@ -13,7 +13,6 @@ import SearchBar from "./SearchBar";
 import Control from "react-leaflet-control";
 import SwitchLayer from "./SwitchLayer";
 import { useSelector, useDispatch } from "react-redux";
-import Navigationbar from "../navigationbar/Navigationbar";
 import { getDetails } from "./DetailsReducer";
 
 const useStyles = makeStyles({
@@ -55,7 +54,6 @@ export default function HomeMap() {
 
   return (
     <>
-      <Navigationbar />
       <Map
         center={position}
         zoom={mapProps.zoom}

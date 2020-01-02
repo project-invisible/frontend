@@ -3,6 +3,7 @@ import { SearchResult } from "../types/SearchResult";
 export const SET_DETAILS = "SET_DETAILS";
 const initialState = {
   showDetails: false,
+  closeDetails:false,
   detailPOI: {}
 };
 /**
@@ -11,6 +12,7 @@ const initialState = {
 const detailsStore = (state = initialState, action) => {
   switch (action.type) {
     case SET_DETAILS:
+      state.closeDetails = action.closeDetails;
       state.showDetails = action.showDetails;
       state.detailPOI = action.detailPOI;
       return state;
@@ -25,7 +27,7 @@ const detailsStore = (state = initialState, action) => {
 export const getDetails = ( showDetails: boolean) => async dispatch => {
   try {
     // no backend yet
-    //   getDetails()
+    //   getDetails(id){ const poi = fetch("localhost:8080/id/poi")}
     dispatch({
       type: SET_DETAILS,
       // poi: poi,
@@ -37,15 +39,16 @@ export const getDetails = ( showDetails: boolean) => async dispatch => {
   }
 };
 
-// export const closeDetailView = (showDetails: boolean) => async dispatch => {
-//   try {
-//     dispatch({
-//       showDetails: showDetails
-//     });
-//   } catch (error) {
-//     console.log("throwing Error", error);
-//     throw error;
-//   }
-// };
+export const closeDetailView = (closeDetails: boolean) => async dispatch => {
+  try {
+    dispatch({
+      type: SET_DETAILS,
+      closeDetails: closeDetails
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
 
 export default detailsStore;

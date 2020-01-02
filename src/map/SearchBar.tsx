@@ -9,8 +9,7 @@ import Result from "./SearchResult";
 import { DomEvent } from "leaflet";
 import { useSelector, useDispatch } from "react-redux";
 import DetailView from "./DetailView";
-import { getDetails } from "./DetailsReducer";
-// import { closeDetailView } from './DetailsReducer';
+import { closeDetailView } from "./DetailsReducer";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -96,7 +95,7 @@ export default function SearchBar() {
 
   const handleClick = event => {
     event.preventDefault();
-    if (searchResults.length === 0) {
+    if (searchResults.length === 0 ) {
       setSearchResults(dummySearchResults);
     } else {
       setSearchResults([]);
@@ -111,17 +110,16 @@ export default function SearchBar() {
           placeholder="Search IN_VISIBLE"
           inputProps={{ "aria-label": "search invisible" }}
         />
-        {/* onClick={dispatch(closeDetailView(false))} */}
         <IconButton
           type="submit"
           className={classes.iconButton}
           aria-label="search"
-          onClick={() => dispatch(getDetails(false))}
+          onClick={() => dispatch(closeDetailView(true))}
         >
           <SearchIcon />
         </IconButton>
       </form>
-      {searchResults.length > 0 && (
+      {(searchResults.length > 0 && !showDetails) && (
         <div className={classes.result}>
           {searchResults.map(result => {
             return <Result result={result} />;
