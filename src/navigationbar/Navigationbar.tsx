@@ -35,9 +35,9 @@ function Navigationbar() {
     </Typography>
         <Button color="inherit" onClick={()=> history.push('/')}>Map</Button>
         <Button color="inherit">Forum</Button>
-        <Button color="inherit">Events</Button>
+        <Button color="inherit" onClick={() => history.push('/events')}>Events</Button>
         <Button color="inherit" onClick={() => history.push('/codeofconduct')}>Code of Conduct</Button>
-        <Button color="inherit">FAQ</Button>
+        <Button color="inherit" onClick={() => history.push('/faq')}>FAQ</Button>
         <Button color="inherit">Feedback</Button>
         <Button color="inherit">Admin</Button>
         <IconButton
