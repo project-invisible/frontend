@@ -7,6 +7,7 @@ export const GET_POIS = 'GET_POIS'
 const initialState = {
     searchResults: [],
     allPois: [],
+    finishedFirstLoading: 0,
   };
 
   /**
@@ -17,12 +18,14 @@ const initialState = {
         case SEARCH_POI:
           return {
             ...state,
-            searchResults: action.searchResults
+            searchResults: action.searchResults,
           }
         case GET_POIS:
+          const loadings = state.finishedFirstLoading +1;
           return {
             ...state,
-            allPois: action.pois
+            allPois: action.pois,
+            finishedFirstLoading: loadings,
           }
     }
     return state;

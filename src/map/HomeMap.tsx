@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useRef } from 'react'
 import { Map, Marker, Popup, TileLayer, Pane, ZoomControl, LayerGroup, Circle, useLeaflet } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,7 +6,7 @@ import SearchBar from './SearchBar';
 import Control from 'react-leaflet-control';
 import SwitchLayer from './SwitchLayer';
 import { useSelector, useDispatch } from 'react-redux';
-import PointsOfInterest from './PointOfInterests';
+import PointsOfInterest from './PointsOfInterest';
 
 const useStyles = makeStyles({
     root: {
@@ -20,6 +20,7 @@ const useStyles = makeStyles({
 export default function HomeMap() {
   const classes = useStyles({});
   const dispatch = useDispatch();
+  const childRef = useRef(null);
 
   const mapProps = {
     lat: 52.5137,
@@ -33,7 +34,7 @@ export default function HomeMap() {
 
     return (
       <>
-        <Map center={position} zoom={mapProps.zoom} className={classes.root} zoomControl={false} >
+        <Map center={position} zoom={mapProps.zoom} className={classes.root} zoomControl={false} onMoveEnd={() => childRef.current.callUpdate()}>
           <ZoomControl position="bottomright"/>
           <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -65,7 +66,7 @@ export default function HomeMap() {
               : <div/>
             }
           </LayerGroup>
-          <PointsOfInterest />
+          <PointsOfInterest ref={childRef}/>
         </Map>
       </>
     )
