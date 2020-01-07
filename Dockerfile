@@ -13,6 +13,7 @@ COPY /scripts /app/scripts
 COPY /config /app/config 
 COPY /public /app/public 
 COPY /src /app/src
+COPY tsconfig.json /app
 RUN npm install --silent
 
 # start app
