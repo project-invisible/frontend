@@ -1,4 +1,5 @@
 import { SearchResult } from "../types/SearchResult";
+import { Search } from "history";
 
 export const SET_DETAILS = "SET_DETAILS";
 const initialState = {
@@ -24,14 +25,18 @@ const detailsStore = (state = initialState, action) => {
  * Actions
  */
 //poi: SearchResult,
-export const getDetails = ( showDetails: boolean) => async dispatch => {
+export const getDetails = ( showDetails: boolean, id:number) => async dispatch => {
   try {
-    // no backend yet
-    //   getDetails(id){ const poi = fetch("localhost:8080/id/poi")}
+    const response = await fetch(`http://localhost:8181/poi/{id}`,{
+      method:'get',
+      headers:{'Content-Type':'application/json'},
+    });
+    const detail:number = await response.json();
     dispatch({
       type: SET_DETAILS,
-      // poi: poi,
-      showDetails: showDetails
+      poiID:id,
+      showDetails: showDetails,
+      detail
     });
   } catch (error) {
     console.log("throwing Error", error);

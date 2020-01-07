@@ -36,6 +36,11 @@ export default function HomeMap() {
     (state: any) => state.detailsStore.showDetails
   );
 
+  const id: number = useSelector(
+    (state:any) => state.detailsStore.id
+  );
+  console.log(id);
+
   const mapProps = {
     lat: 51.505,
     lng: -0.09,
@@ -75,8 +80,8 @@ export default function HomeMap() {
           position={position}
           onClick={() =>
             !showDetails
-              ? dispatch(getDetails(true))
-              : dispatch(getDetails(false))
+              ? dispatch(getDetails(true, id))
+              : dispatch(getDetails(false, id))
           }
         >
           <Popup>
@@ -91,8 +96,8 @@ export default function HomeMap() {
                   position={marker}
                   onClick={() =>
                     !showDetails
-                      ? dispatch(getDetails(true))
-                      : dispatch(getDetails(false))
+                      ? dispatch(getDetails(true, id))
+                      : dispatch(getDetails(false, id))
                   }
                 >
                   <Popup>
