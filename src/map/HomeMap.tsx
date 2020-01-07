@@ -19,22 +19,20 @@ const useStyles = makeStyles({
 
 export default function HomeMap() {
   const classes = useStyles({});
-  const dispatch = useDispatch();
   const childRef = useRef(null);
 
-  const mapProps = {
+  const mapAttributes = {
     lat: 52.5137,
     lng: 13.322,
     zoom: 8,
   }
-  const position: LatLngExpression = [mapProps.lat, mapProps.lng]
+  const position: LatLngExpression = [mapAttributes.lat, mapAttributes.lng]
 
-  const { map } = useLeaflet();
   const markers: Array<LatLngExpression> = useSelector((state: any) => state.switchLayerStore.mapMarker);
 
     return (
       <>
-        <Map center={position} zoom={mapProps.zoom} className={classes.root} zoomControl={false} onMoveEnd={() => childRef.current.callUpdate()}>
+        <Map center={position} zoom={mapAttributes.zoom} className={classes.root} zoomControl={false} onMoveEnd={() => childRef.current.callUpdate()}>
           <ZoomControl position="bottomright"/>
           <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

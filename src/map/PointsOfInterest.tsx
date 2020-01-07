@@ -17,7 +17,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const [initialLoad, setInitialLoad] = useState<boolean>(false);
 
   useEffect(() => {
-    const res = dispatch(getAllPOIs());
+    dispatch(getAllPOIs());
     updateMarkers();
   }, []);
 
