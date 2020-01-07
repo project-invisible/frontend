@@ -1,19 +1,13 @@
-import React, { Component, useEffect } from "react";
-import {
-  Map,
-  Marker,
-  Popup,
-  TileLayer,
-  ZoomControl,
-  LayerGroup
-} from "react-leaflet";
-import { LatLngExpression } from "leaflet";
-import { makeStyles } from "@material-ui/core/styles";
-import SearchBar from "./SearchBar";
-import Control from "react-leaflet-control";
-import SwitchLayer from "./SwitchLayer";
-import { useSelector, useDispatch } from "react-redux";
+import React, { Component, useEffect, useRef } from 'react'
+import { Map, Marker, Popup, TileLayer, Pane, ZoomControl, LayerGroup, Circle, useLeaflet } from 'react-leaflet'
+import { LatLngExpression } from 'leaflet'
+import { makeStyles } from '@material-ui/core/styles';
+import SearchBar from './SearchBar';
+import Control from 'react-leaflet-control';
+import SwitchLayer from './SwitchLayer';
+import { useSelector, useDispatch } from 'react-redux';
 import { getDetails } from "./DetailsReducer";
+import PointsOfInterest from './PointsOfInterest';
 
 const useStyles = makeStyles({
   root: {
@@ -30,7 +24,7 @@ const center: LatLngExpression = [52.505, -0.09];
 
 export default function HomeMap() {
   const classes = useStyles({});
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
 
   const showDetails: boolean = useSelector(
     (state: any) => state.detailsStore.showDetails
@@ -39,78 +33,66 @@ export default function HomeMap() {
   const id: number = useSelector(
     (state:any) => state.detailsStore.id
   );
-  console.log(id);
+  console.log(id);  
+const childRef = useRef(null);
 
-  const mapProps = {
-    lat: 51.505,
-    lng: -0.09,
-    zoom: 13
-  };
-
-  const zoomControl = {
-    position: "bottomright"
-  };
-
-  const position: LatLngExpression = [mapProps.lat, mapProps.lng];
+  const mapAttributes = {
+    lat: 52.5137,
+    lng: 13.322,
+    zoom: 8,
+  }
+  const position: LatLngExpression = [mapAttributes.lat, mapAttributes.lng]
 
   const markers: Array<LatLngExpression> = useSelector(
     (state: any) => state.switchLayerStore.mapMarker
   );
 
-  return (
-    <>
-      <Map
-        center={position}
-        zoom={mapProps.zoom}
-        className={classes.root}
-        zoomControl={false}
-      >
-        <ZoomControl position="bottomright" />
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Control position="topleft">
-          <SearchBar />
-        </Control>
-        <Control position="topleft">
-          <SwitchLayer />
-        </Control>
-        <Marker
-          position={position}
+    return (
+      <>
+        <Map center={position} zoom={mapAttributes.zoom} className={classes.root} zoomControl={false} onMoveEnd={() => childRef.current.callUpdate()}>
+          <ZoomControl position="bottomright"/>
+          <TileLayer
+            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Control position="topleft" >
+              <SearchBar />
+          </Control>
+          <Control position="topleft" >
+              <SwitchLayer />
+          </Control>
+          <Marker position={position}
           onClick={() =>
             !showDetails
               ? dispatch(getDetails(true, id))
               : dispatch(getDetails(false, id))
-          }
-        >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-        <LayerGroup>
-          {markers ? (
-            markers.map(marker => {
-              return (
-                <Marker
-                  position={marker}
+          }>
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+          </Marker>
+          <LayerGroup>
+            {
+              markers ?
+              markers.map( marker => {
+                return (
+                  <Marker position={marker}
                   onClick={() =>
                     !showDetails
                       ? dispatch(getDetails(true, id))
                       : dispatch(getDetails(false, id))
-                  }
-                >
-                  <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                  </Popup>
-                </Marker>
-              );
-            })
-          ) : (
-            <div />
-          )}
-        </LayerGroup>
-      </Map>
-    </>
-  );
+                  }>
+                    <Popup>
+                      A pretty CSS3 popup. <br /> Easily customizable.
+                    </Popup>
+                  </Marker>
+                )
+              })
+              : <div/>
+            }
+          </LayerGroup>
+          <PointsOfInterest ref={childRef}/>
+        </Map>
+      </>
+    )
 }
