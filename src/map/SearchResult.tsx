@@ -4,6 +4,7 @@ import { SearchResult } from './../types/SearchResult';
 import { Card, CardContent, Typography, CardActions } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
+import { PointOfInterest } from '../types/PointOfInterest';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type ResultProps = {
-    result: SearchResult,
+    result: PointOfInterest,
 }
 
 export default function Result(props: ResultProps) {
@@ -38,8 +39,8 @@ export default function Result(props: ResultProps) {
           {result.postal}
         </Typography>
         <div className={classes.ratingContainer}>
-            <Rating name="disabled" value={result.rating} disabled />
-            <Typography className={classes.rating}>{result.rating}</Typography>    
+            <Rating name="disabled" value={result.overallRating} disabled />
+            <Typography className={classes.rating}>{result.overallRating}</Typography>    
         </div>
       </CardContent>
       <CardActions>
