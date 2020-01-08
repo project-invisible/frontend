@@ -35,14 +35,10 @@ const initialState = {
  * Actions
  */
 export const searchPOI = (query: string) => async (dispatch, getState) => {
-    const body: BodyInit = JSON.stringify({
-      query
-    });
     try {
-      const response = await fetch(`http://localhost:8182/poi/search`, {
+      const response = await fetch(`http://localhost:8182/poi/search?query=${query}`, {
         method: 'post',
         headers: {'Content-Type':'application/json'},
-        body,
       });
       const searchResults: Array<PointOfInterest> = await response.json();
       dispatch({

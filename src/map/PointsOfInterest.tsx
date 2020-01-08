@@ -36,6 +36,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
 
   const { map } = useLeaflet();
   const allPOIs: Array<PointOfInterest> = useSelector((state: any) => state.searchStore.allPois);
+  const searchResults: Array<PointOfInterest> = useSelector((state: any) => state.searchStore.searchResults);
   
   const updateMarkers = () => {
     const tempMarkers = allPOIs.filter( poi => {
@@ -58,25 +59,45 @@ const PointsOfInterest = forwardRef((props, ref) => {
       <>
           <LayerGroup>
             {
-              allPOIs && map.getZoom() > 4 ?
-              filteredMarkers.map( (poi, index) => {
-                const coordinates: LatLngExpression = [
-                  poi.coordinates.y,
-                  poi.coordinates.x
-                ];
-                return (
-                  <Marker key={index} position={coordinates}  onClick={() =>
-                    !showDetails
-                      ? dispatch(getDetails(true, poi.id))
-                      : dispatch(getDetails(false, poi.id))
-                  }>
-                    <Popup>
-                      {poi.name}
-                    </Popup>
-                  </Marker>
-                )
-              })
-              : <div/>
+              (searchResults.length > 0) && (map.getZoom() > 5) ? (
+                searchResults.map( (poi, index) => {
+                  const coordinates: LatLngExpression = [
+                    poi.coordinates.y,
+                    poi.coordinates.x
+                  ];
+                  return (
+                    <Marker key={index} position={coordinates} onClick={() =>
+                      !showDetails
+                        ? dispatch(getDetails(true, poi.id))
+                        : dispatch(getDetails(false, poi.id))
+                    }>
+                      <Popup>
+                        {poi.name}
+                      </Popup>
+                    </Marker>
+                  )
+                })
+              ) : (
+                allPOIs && (map.getZoom() > 5) ?
+                filteredMarkers.map( (poi, index) => {
+                  const coordinates: LatLngExpression = [
+                    poi.coordinates.y,
+                    poi.coordinates.x
+                  ];
+                  return (
+                    <Marker key={index} position={coordinates} onClick={() =>
+                      !showDetails
+                        ? dispatch(getDetails(true, poi.id))
+                        : dispatch(getDetails(false, poi.id))
+                    }>
+                      <Popup>
+                        {poi.name}
+                      </Popup>
+                    </Marker>
+                  )
+                })
+                : <div/>
+              )
             }
           </LayerGroup>
       </>
