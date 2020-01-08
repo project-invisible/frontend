@@ -4,6 +4,7 @@ import { LatLngExpression } from 'leaflet'
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllPOIs } from './SearchReducer';
+import { getDetails } from "./DetailsReducer";
 import { PointOfInterest } from '../types/PointOfInterest';
 
 const useStyles = makeStyles({
@@ -15,6 +16,10 @@ const PointsOfInterest = forwardRef((props, ref) => {
 
   const [filteredMarkers, setFilteredMarkers] = useState<Array<PointOfInterest>>([]);
   const [initialLoad, setInitialLoad] = useState<boolean>(false);
+  
+  const showDetails: boolean = useSelector(
+    (state: any) => state.detailsStore.showDetails
+  );
 
   useEffect(() => {
     dispatch(getAllPOIs());
@@ -60,7 +65,11 @@ const PointsOfInterest = forwardRef((props, ref) => {
                   poi.coordinates.x
                 ];
                 return (
-                  <Marker key={index} position={coordinates}>
+                  <Marker key={index} position={coordinates}  onClick={() =>
+                    !showDetails
+                      ? dispatch(getDetails(true, poi.id))
+                      : dispatch(getDetails(false, poi.id))
+                  }>
                     <Popup>
                       {poi.name}
                     </Popup>
