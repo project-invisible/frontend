@@ -63,6 +63,7 @@ export default function SearchBar() {
   const handleClick = event => {
     event.preventDefault();
     dispatch(searchPOI(searchQuery));
+    dispatch(closeDetailView(false));
   };
 
   const search = (
