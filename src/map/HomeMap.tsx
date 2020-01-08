@@ -44,11 +44,6 @@ export default function HomeMap() {
           <Control position="topleft" >
               <SwitchLayer />
           </Control>
-          <Marker position={position}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker>
           <LayerGroup>
             {
               markers ?

@@ -1,17 +1,14 @@
 import React,  { useState, useEffect, useRef } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import { Menu, MenuItem } from '@material-ui/core';
-import { SearchResult } from './../types/SearchResult';
 import Result from './SearchResult';
 import { DomEvent } from 'leaflet'
 import { useDispatch, useSelector } from 'react-redux';
 import { searchPOI } from './SearchReducer';
 import TextField from '@material-ui/core/TextField';
+import { PointOfInterest } from '../types/PointOfInterest';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,65 +32,21 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     result: {
       overflowY: 'scroll',
+      width: 400,
       height: 'calc(100vh - 20vh)',
     },
   }),
 );
 
-// const dummySearchResults: Array<SearchResult> = [
-//   {
-//     name: "First result",
-//     rating: 4.7,
-//     street: "Resultstreet",
-//     postal: 12334,
-//   },
-//   {
-//     name: "Second result",
-//     rating: 2.3,
-//     street: "Another street 21",
-//     postal: 25466,
-//   },
-//   {
-//     name: "Second result",
-//     rating: 2.3,
-//     street: "Another street 21",
-//     postal: 25466,
-//   },
-//   {
-//     name: "Second result",
-//     rating: 2.3,
-//     street: "Another street 21",
-//     postal: 25466,
-//   },
-//   {
-//     name: "Second result",
-//     rating: 2.3,
-//     street: "Another street 21",
-//     postal: 25466,
-//   },
-//   {
-//     name: "Second result",
-//     rating: 2.3,
-//     street: "Another street 21",
-//     postal: 25466,
-//   }
-// ]
-
 export default function SearchBar() {
   const classes = useStyles({});
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [anchorEl, setAnchorEl] = useState(null);
-  let container = null;
 
-  const open = Boolean(anchorEl);
-  const inputEl = useRef(null);
   const dispatch = useDispatch();
   
-  const searchResults: Array<SearchResult> = useSelector((state: any) => state.searchStore.searchResults);
+  const searchResults: Array<PointOfInterest> = useSelector((state: any) => state.searchStore.searchResults);
 
   const refContainer = (element) => {
-    container = element;
     if (element) {
       DomEvent
         .disableClickPropagation(element)
@@ -104,9 +57,6 @@ export default function SearchBar() {
   const handleClick = event => {
     event.preventDefault();
     dispatch(searchPOI(searchQuery));
-  };
-
-  const handleClose = () => {
   };
 
   const search = (
