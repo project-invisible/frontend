@@ -32,7 +32,7 @@ export default function HomeMap() {
 
     return (
       <>
-        <Map center={position} zoom={mapAttributes.zoom} className={classes.root} zoomControl={false} onMoveEnd={() => childRef.current.callUpdate()}>
+        <Map center={position} zoom={mapAttributes.zoom} className={classes.root} zoomControl={false} onMoveEnd={() => childRef.current ? childRef.current.callUpdate() : null}>
           <ZoomControl position="bottomright"/>
           <TileLayer
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

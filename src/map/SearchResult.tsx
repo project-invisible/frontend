@@ -5,6 +5,7 @@ import { Card, CardContent, Typography, CardActions } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
 import { PointOfInterest } from '../types/PointOfInterest';
+import RatingModal from './../rating/RatingModal';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,6 +43,7 @@ export default function Result(props: ResultProps) {
             <Rating name="disabled" value={result.overallRating} disabled />
             <Typography className={classes.rating}>{result.overallRating}</Typography>    
         </div>
+        <RatingModal />
       </CardContent>
       <CardActions>
         <Button size="small">Learn More</Button>
