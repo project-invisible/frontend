@@ -16,8 +16,13 @@ export default function FinishView() {
 
   return (<Card className={classes.finishContent}>
       <CardContent>
-        <Typography variant="h4" component="h2">
-          Congratulations! You have finished the rating!
+      <Typography variant="h4" component="h2">
+        Thank you!
+        </Typography>
+        <Typography variant="body2" component="div">
+        Thank you!
+        Thank you very much for your time and thank you for helping us making the world a place of equal chances and equal opportunities!  We really appreciate it!
+        Not happy? Give us feedback on this survey so that we can improve day by day.
         </Typography>
       </CardContent>
       <CardActions>

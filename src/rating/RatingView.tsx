@@ -24,7 +24,6 @@ export default function RatingView(props: ResultProps) {
   const classes = useStyles({});
   const { currentPage, setPageRating, setPageText } = props;
 
-  // TODO: index not working!
   return (<Card className={classes.ratingContent}>
       <CardContent>
         <Typography variant="h4" component="h2">
@@ -39,7 +38,7 @@ export default function RatingView(props: ResultProps) {
                         </Typography>
                         <div>
                             <Rating
-                                name="simple-controlled"
+                                name={`simple-controlled-${index}`}
                                 key={`${index}-rating-button`}
                                 value={rating.criteriaRating}
                                 onChange={(event, newValue) => {

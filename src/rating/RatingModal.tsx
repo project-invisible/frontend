@@ -5,7 +5,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { Rating } from '../types/Rating';
 import RatingView from './RatingView';
-import { MobileStepper } from '@material-ui/core';
+import { MobileStepper, CardActions } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
@@ -21,8 +21,10 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
     },
     modalContent: {
-        height: '30em',
         width: '30em',
+    },
+    startContainer: {
+        justifyContent: 'flex-end',
     }
   }),
 );
@@ -120,9 +122,9 @@ export default function RatingModal() {
 
   return (
     <div>
-      <button type="button" onClick={handleOpen}>
-        react-transition-group
-      </button>
+      <CardActions>
+        <Button size="small" onClick={handleOpen}>Rate</Button>
+      </CardActions>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -136,7 +138,8 @@ export default function RatingModal() {
         }}
       >
         <Fade in={open}>
-            <div className={classes.modalContent}>
+            <Card className={classes.modalContent}>
+                <CardContent>
                 {
                     pageCount === -1 ? (
                         <IntroductionView currentUniversity={rating.pointOfInterest} />
@@ -147,25 +150,31 @@ export default function RatingModal() {
                         setPageText={setPageRatingText}
                          />) : (<FinishView/>)
                 }
-                <MobileStepper
-                    steps={maxPages + 1}
-                    position="static"
-                    variant="text"
-                    activeStep={pageCount + 1 }
-                    nextButton={
-                    <Button size="small" onClick={handleNext} disabled={pageCount === maxPages - 1}>
-                        <Typography variant="body2" component="p">Next</Typography>
-                        <KeyboardArrowRight />
-                    </Button>
-                    }
-                    backButton={
-                    <Button size="small" onClick={handleBack} disabled={pageCount === -1}>
-                        <KeyboardArrowLeft />
-                        <Typography variant="body2" component="p">Back</Typography>
-                    </Button>
-                    }
-                />
-            </div>
+                </CardContent>
+                {
+                    pageCount === -1 ? (
+                        <CardActions className={classes.startContainer}>
+                            <Button onClick={handleNext}>Start survey</Button>
+                        </CardActions>
+                        ) : (<MobileStepper
+                                steps={maxPages}
+                                position="static"
+                                variant="text"
+                                activeStep={pageCount}
+                                nextButton={
+                                <Button size="small" onClick={handleNext} disabled={pageCount === maxPages - 1}>
+                                    <Typography variant="body2" component="p">Next</Typography>
+                                    <KeyboardArrowRight />
+                                </Button>
+                                }
+                                backButton={
+                                <Button size="small" onClick={handleBack} disabled={pageCount === 0}>
+                                    <KeyboardArrowLeft />
+                                    <Typography variant="body2" component="p">Back</Typography>
+                                </Button>
+                                }
+                />)}
+            </Card>
             </Fade>
       </Modal>
     </div>

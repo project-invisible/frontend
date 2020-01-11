@@ -43,7 +43,6 @@ export default function Result(props: ResultProps) {
             <Rating name="disabled" value={result.overallRating} disabled />
             <Typography className={classes.rating}>{result.overallRating}</Typography>    
         </div>
-        <RatingModal />
       </CardContent>
       <CardActions>
         <Button size="small">Learn More</Button>
