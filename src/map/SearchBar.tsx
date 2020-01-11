@@ -6,6 +6,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import Result from './SearchResult';
 import { DomEvent } from 'leaflet'
 import { useDispatch, useSelector } from 'react-redux';
+import DetailView from "./DetailView";
+import { closeDetailView } from "./DetailsReducer";
 import { searchPOI } from './SearchReducer';
 import TextField from '@material-ui/core/TextField';
 import { PointOfInterest } from '../types/PointOfInterest';
@@ -13,22 +15,22 @@ import { PointOfInterest } from '../types/PointOfInterest';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: '2px 4px',
-      display: 'flex',
-      alignItems: 'center',
+      padding: "2px 4px",
+      display: "flex",
+      alignItems: "center",
       width: 400,
-      zIndex: 5000,
+      zIndex: 5000
     },
     input: {
       marginLeft: theme.spacing(1),
-      flex: 1,
+      flex: 1
     },
     iconButton: {
-      padding: 10,
+      padding: 10
     },
     divider: {
       height: 28,
-      margin: 4,
+      margin: 4
     },
     result: {
       overflowY: 'scroll',
@@ -43,20 +45,25 @@ export default function SearchBar() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const dispatch = useDispatch();
+
+  const showDetails: boolean = useSelector(
+    (state: any) => state.detailsStore.showDetails
+  );
   
   const searchResults: Array<PointOfInterest> = useSelector((state: any) => state.searchStore.searchResults);
 
   const refContainer = (element) => {
     if (element) {
-      DomEvent
-        .disableClickPropagation(element)
-        .disableScrollPropagation(element);
+      DomEvent.disableClickPropagation(element).disableScrollPropagation(
+        element
+      );
     }
-  }
+  };
 
   const handleClick = event => {
     event.preventDefault();
     dispatch(searchPOI(searchQuery));
+    dispatch(closeDetailView(false));
   };
 
   const search = (
@@ -84,6 +91,7 @@ export default function SearchBar() {
             </div>
           )
         }
+        {showDetails && <DetailView />}
     </Paper>);
 
   return search;
