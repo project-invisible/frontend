@@ -11,22 +11,16 @@ script:
 before_install:
 - openssl aes-256-cbc -K $encrypted_111186c124b5_key -iv $encrypted_111186c124b5_iv
   -in travis_rsa.enc -out travis_rsa -d
+- eval "$(ssh-agent -s)"
 - chmod 600 travis_rsa
-- mv travis_rsa ~/.ssh/rsa
-- cat server.pub >> $HOME/.ssh/known_hosts
+- ssh-add travis_rsa
 after_success:
-  -   bash ./deploy.sh
-
-#!/bin/bash
-set -xe
-
-if [ $TRAVIS_BRANCH == 'master' ] ; then
-  eval "$ssh-agent -s)"
-  ssh-add
-  npm run build
-  rsync -rq --delete --rsync-path="mkdir -p frontend $$ rsync" \
-  $TRAVIS_BUILD_DIR/public travis@invisible.f4.htw-berlin.de:frontend
-else
-  echo "Not deploying, since this branch isn't master"
-fi
-
+  - npm run build
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: 
+    ssh  -i travis_rsa -o StrictHostKeyChecking=no travis@invisible.f4.htw-berlin.de
+    scp $TRAVIS_BUILD_DIR/public travis@invisible.f4.htw-berlin.de:/home
+  on:
+    branch: master
