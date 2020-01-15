@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  header: {
+    background: 'linear-gradient(-90deg, #FF83FF, #509CFE)'
   }
 }));
 
@@ -28,7 +31,7 @@ function Navigationbar() {
   const classes = useStyles({});
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" className={classes.header}>
       <Toolbar>
       <Typography variant="h6" className={classes.title}>
       IN_VISIBLE
