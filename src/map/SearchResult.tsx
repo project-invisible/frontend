@@ -6,6 +6,8 @@ import Rating from "@material-ui/lab/Rating";
 import { PointOfInterest } from "../types/PointOfInterest";
 import { useDispatch } from "react-redux";
 import { getDetails } from "./DetailsReducer";
+import { useLeaflet } from "react-leaflet";
+import { marker } from "leaflet";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,8 +31,12 @@ export default function Result(props: ResultProps) {
   const dispatch = useDispatch();
   const { result } = props;
 
+  const { map } = useLeaflet();
+
+
   const handleShowDetails = () => {
     dispatch(getDetails(true, result.id));
+    map.flyTo([result.coordinates.y, result.coordinates.x], 12);
   };
 
   return (
