@@ -3,11 +3,13 @@ import { PointOfInterest } from './../types/PointOfInterest';
 
 export const SEARCH_POI = 'SEARCH_POI'
 export const GET_POIS = 'GET_POIS'
+export const TOGGLE_SEARCH_LOADING = 'TOGGLE_SEARCH_LOADING'
 
 const initialState = {
     searchResults: [],
     allPois: [],
     finishedFirstLoading: 0,
+    finishedSearchLoading: false,
   };
 
   /**
@@ -19,6 +21,7 @@ const initialState = {
           return {
             ...state,
             searchResults: action.searchResults,
+            finishedSearchLoading: true,
           }
         case GET_POIS:
           const loadings = state.finishedFirstLoading +1;
@@ -26,6 +29,11 @@ const initialState = {
             ...state,
             allPois: action.pois,
             finishedFirstLoading: loadings,
+          }
+        case TOGGLE_SEARCH_LOADING:
+          return {
+            ...state,
+            finishedSearchLoading: action.toggleLoading,
           }
     }
     return state;
@@ -44,6 +52,18 @@ export const searchPOI = (query: string) => async (dispatch, getState) => {
       dispatch({
         type: SEARCH_POI,
         searchResults,
+      })
+    } catch (error) {
+        console.log("throwing Error", error);
+        throw error;
+    }
+  };
+
+  export const toggleSearchLoading = (toggleLoading: boolean ) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: TOGGLE_SEARCH_LOADING,
+        toggleLoading,
       })
     } catch (error) {
         console.log("throwing Error", error);
