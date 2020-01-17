@@ -12,6 +12,8 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import { Card, CardContent, Typography } from '@material-ui/core';
 import FinishView from './FinishView';
 import IntroductionView from './IntroductionView';
+import { useDispatch, useSelector } from 'react-redux';
+import { openModal, addRating } from './RatingReducer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,17 +87,10 @@ const ratingDummy: Rating = {
 
 export default function RatingModal() {
   const classes = useStyles({});
-  const [open, setOpen] = React.useState(false);
   const [rating, setRating] = React.useState<Rating>(ratingDummy);
+  const dispatch = useDispatch();
   const [pageCount, setPageCount] = React.useState<number>(-1);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const toggleModal: boolean = useSelector((state: any) => state.ratingReducer.toggleModal);
 
   const setPageRating = (criteriaRating: number, index: number) => {
         // deep copy of state object
@@ -123,21 +118,21 @@ export default function RatingModal() {
   return (
     <div>
       <CardActions>
-        <Button size="small" onClick={handleOpen}>Rate</Button>
+        <Button size="small" onClick={() => dispatch(openModal(true))}>Rate</Button>
       </CardActions>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={open}
-        onClose={handleClose}
+        open={toggleModal}
+        onClose={() => dispatch(openModal(false))}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={toggleModal}>
             <Card className={classes.modalContent}>
                 <CardContent>
                 {
@@ -162,8 +157,16 @@ export default function RatingModal() {
                                 variant="text"
                                 activeStep={pageCount}
                                 nextButton={
-                                <Button size="small" onClick={handleNext} disabled={pageCount === maxPages - 1}>
-                                    <Typography variant="body2" component="p">Next</Typography>
+                                <Button
+                                  size="small"  
+                                  onClick={(pageCount === maxPages - 2) ? ( () => dispatch(addRating(rating))) :  handleNext} 
+                                  disabled={pageCount === maxPages - 1}>
+                                    <Typography variant="body2" component="p">
+                                      {(pageCount === maxPages - 2) ? 
+                                      <p>Save Rating</p> : 
+                                      <p>Next</p>
+                                      }
+                                    </Typography>
                                     <KeyboardArrowRight />
                                 </Button>
                                 }
