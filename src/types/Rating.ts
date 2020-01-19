@@ -1,23 +1,46 @@
 import { PointOfInterest } from './PointOfInterest';
+import { User } from './User';
 
 export interface Rating {
     id: number,
     pointOfInterest: PointOfInterest,
-    overallRating: number,
-    criteriaRatings: Criteria[], 
+    user: User,
+    generalComment: string,
+    categoryRatings: CategoryRating[], 
     creationDate?: Date,
     lastUpdated?: Date,
 }
 
-export interface Criteria {
+export interface CategoryRating {
     id: number,
-    name: string,
-    overallRating: number,
-    criteriaRatings: CriteriaObject[];
+    question: Question,
+    rating: RatingOptions,
+    comment: string,
+    tag: string[],
 }
 
-export interface CriteriaObject {
-    name: string,
-    criteriaRating: number,
-    criteriaText: string,
+export interface Question {
+    id: number,
+    text: string,
+    category: Category,
+    subCategory: SubCategory,
+    hasCheckbox: boolean;
+    followUpQuestions: number[],
 }
+
+export interface Category {
+    id: number,
+    name: string,
+}
+
+export interface SubCategory {
+    id: number,
+    name: string,
+    category: Category
+}
+
+export enum RatingOptions {
+    YES = 'YES',
+    FALSE = 'FALSE',
+    UNDECIDED = 'UNDECIDED',
+  }
