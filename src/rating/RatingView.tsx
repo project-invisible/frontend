@@ -6,7 +6,8 @@ import {
   Typography,
   CardActions,
   RadioGroup,
-  Chip
+  Chip,
+  Grid
 } from "@material-ui/core";
 import { Rating, RatingOptions, CategoryRating } from "../types/Rating";
 import Radio from "@material-ui/core/Radio";
@@ -19,6 +20,13 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     ratingContent: {
       height: "100%"
+    },
+    textFields: {
+      width: "100%",
+      marginBottom: "0.3em"
+    },
+    chip: {
+      margin: "0.2em"
     }
   })
 );
@@ -28,11 +36,17 @@ type ResultProps = {
   setPageRating: (criteriaRating: RatingOptions) => void;
   setPageText: (text: string) => void;
   addTag: (string) => void;
+  removeTag: (string) => void;
 };
+
+interface ChipData {
+    key: number;
+    label: string;
+  }
 
 export default function RatingView(props: ResultProps) {
   const classes = useStyles({});
-  const { currentPage, setPageRating, setPageText, addTag } = props;
+  const { currentPage, setPageRating, setPageText, addTag, removeTag } = props;
   const [tag, setTag] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,62 +60,89 @@ export default function RatingView(props: ResultProps) {
     setTag("");
   };
 
+  const handleDelete = (tag: string) => {
+        removeTag(tag);
+  }
+
   return (
     <Card className={classes.ratingContent}>
       <CardContent>
-        <Typography variant="h4" component="h2">
-          {`${currentPage.question.category.name} - ${currentPage.question.subCategory.name}`}
-        </Typography>
-        <div>
-          <Typography variant="body2" component="div">
-            {currentPage.question.text}
-          </Typography>
-          <RadioGroup
-            aria-label="gender"
-            name="gender1"
-            value={currentPage.rating}
-            onChange={handleChange}
-          >
-            <FormControlLabel
-              value={RatingOptions.YES}
-              control={<Radio />}
-              label="Yes"
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h4" component="h2">
+              {`${currentPage.question.category.name} - ${currentPage.question.subCategory.name}`}
+            </Typography>
+          </Grid>
+          <Grid container item xs={12}>
+            <Grid item xs={12}>
+              <Typography variant="body2" component="div">
+                {currentPage.question.text}
+              </Typography>
+            </Grid>
+            {currentPage.question.hasCheckbox && (
+              <RadioGroup
+                aria-label="gender"
+                name="gender1"
+                value={currentPage.rating}
+                onChange={handleChange}
+              >
+                <FormControlLabel
+                  value={RatingOptions.YES}
+                  control={<Radio />}
+                  label="Yes"
+                />
+                <FormControlLabel
+                  value={RatingOptions.FALSE}
+                  control={<Radio />}
+                  label="False"
+                />
+                <FormControlLabel
+                  value={RatingOptions.UNDECIDED}
+                  control={<Radio />}
+                  label="Undecided"
+                />
+              </RadioGroup>
+            )}
+            <TextField
+              aria-label="empty textarea"
+              placeholder="Enter a comment for this question!"
+              onChange={event => setPageText(event.target.value)}
+              value={currentPage.comment}
+              className={classes.textFields}
+              multiline
+              rows="4"
+              variant="outlined"
             />
-            <FormControlLabel
-              value={RatingOptions.FALSE}
-              control={<Radio />}
-              label="False"
-            />
-            <FormControlLabel
-              value={RatingOptions.UNDECIDED}
-              control={<Radio />}
-              label="Undecided"
-            />
-          </RadioGroup>
-          <TextField
-            aria-label="empty textarea"
-            placeholder="Enter a comment for this question!"
-            onChange={event => setPageText(event.target.value)}
-            value={currentPage.comment}
-            multiline
-            rows="4"
-            variant="outlined"
-          />
-        </div>
-        <div>
-          {currentPage.tag.map((tag, index) => {
-            return <Chip key={index} label={tag} />;
-          })}
-        </div>
-        <TextField
-          id="standard-basic"
-          label="Add tag"
-          value={tag}
-          onChange={event => setTag(event.target.value)}
-        />
-        <IconButton onClick={onAddTag} aria-label="add">
-          <AddCircle />
-        </IconButton>
+          </Grid>
+          <Grid xs={12}>
+            {currentPage.tag.map((tag, index) => {
+              return (
+                <Chip
+                  key={index}
+                  label={tag}
+                  className={classes.chip}
+                  onDelete={() => handleDelete(tag)}
+                />
+              );
+            })}
+          </Grid>
+          <Grid container xs={12}>
+            <Grid item xs={6}>
+              <TextField
+                id="standard-basic"
+                label="Add tag"
+                value={tag}
+                className={classes.textFields}
+                onChange={event => setTag(event.target.value)}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton onClick={onAddTag} aria-label="add">
+                <AddCircle />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Grid>
       </CardContent>
     </Card>
   );

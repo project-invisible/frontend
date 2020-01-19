@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center"
     },
     modalContent: {
-      width: "30em"
+      width: "75%"
     },
     startContainer: {
       justifyContent: "flex-end"
@@ -74,12 +74,12 @@ const ratingDummy: Rating = {
   categoryRatings: [
     {
       id: 1,
-      comment: "dummy",
-      tag: ["tag"],
+      comment: "",
+      tag: ["fb4"],
       rating: RatingOptions.YES,
       question: {
         id: 1245,
-        text: "test",
+        text: "This is the first question. There is some text explaining the question. What do you think?",
         category: {
           id: 1,
           name: "Category 1"
@@ -88,7 +88,7 @@ const ratingDummy: Rating = {
         followUpQuestions: [],
         subCategory: {
           id: 345,
-          name: "ttwerwe",
+          name: "Subcategory 1",
           category: {
             id: 1,
             name: "Category 1"
@@ -98,8 +98,8 @@ const ratingDummy: Rating = {
     },
     {
       id: 12444,
-      comment: "dummy",
-      tag: ["tag", "tag2"],
+      comment: "",
+      tag: ["fachbereich4", "computer science"],
       rating: RatingOptions.YES,
       question: {
         id: 1245,
@@ -112,7 +112,7 @@ const ratingDummy: Rating = {
         followUpQuestions: [1],
         subCategory: {
           id: 345,
-          name: "ttwerwe",
+          name: "Subcategory 2",
           category: {
             id: 1,
             name: "Category 1"
@@ -153,6 +153,13 @@ export default function RatingModal() {
   const addTag = (tag: string) => {
     let oldRating: Rating = JSON.parse(JSON.stringify(rating));
     oldRating.categoryRatings[pageCount].tag.push(tag);
+    setRating(oldRating);
+  };
+  
+  const removeTag = (tag: string) => {
+    let oldRating: Rating = JSON.parse(JSON.stringify(rating));
+    const filteredTags = oldRating.categoryRatings[pageCount].tag.filter(e => e !== tag);
+    oldRating.categoryRatings[pageCount].tag = filteredTags;
     setRating(oldRating);
   };
 
@@ -225,6 +232,7 @@ export default function RatingModal() {
                   setPageRating={setPageRating}
                   setPageText={setPageRatingText}
                   addTag={addTag}
+                  removeTag={removeTag}
                 />
               ) : (
                 <FinishView />
