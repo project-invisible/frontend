@@ -35,7 +35,7 @@ export default function DetailView() {
           </Typography>
         )}
       </CardContent>
-      <RatingModal />
+      <RatingModal ratedPoi={detail} />
     </Card>
   );
 }

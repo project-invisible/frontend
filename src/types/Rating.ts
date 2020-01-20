@@ -3,10 +3,10 @@ import { User } from './User';
 
 export interface Rating {
     id: number,
-    pointOfInterest: PointOfInterest,
+    poi: PointOfInterest,
     user: User,
     generalComment: string,
-    categoryRatings: CategoryRating[], 
+    categorieRatings: CategoryRating[], 
     creationDate?: Date,
     lastUpdated?: Date,
 }

@@ -5,7 +5,7 @@ export const TOGGLE_MODAL = "OPEN_MODAL";
 
 const initialState = {
   rating: [],
-  modalOpen: false
+  modalOpen: false,
 };
 
 /**
@@ -16,7 +16,6 @@ const ratingStore = (state = initialState, action) => {
     case ADD_RATING:
       return {
         ...state,
-        modalOpen: false
       };
     case TOGGLE_MODAL:
       return {

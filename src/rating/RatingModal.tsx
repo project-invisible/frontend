@@ -15,6 +15,8 @@ import IntroductionView from "./IntroductionView";
 import { useDispatch, useSelector } from "react-redux";
 import { openModal, addRating } from "./RatingReducer";
 import { Status, Role } from "../types/User";
+import { PointOfInterest } from './../types/PointOfInterest';
+import Result from './../map/SearchResult';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +44,7 @@ const ratingDummy: Rating = {
   id: 1,
   generalComment: "Test",
   user: {
-    id: 1,
+    id: 8,
     email: "Test",
     username: "Test",
     anonymous: true,
@@ -56,7 +58,7 @@ const ratingDummy: Rating = {
       phone: 1239234
     }
   },
-  pointOfInterest: {
+  poi: {
     id: 2,
     city: "Test",
     coordinates: {
@@ -71,7 +73,7 @@ const ratingDummy: Rating = {
     postal: 123,
     website: ""
   },
-  categoryRatings: [
+  categorieRatings: [
     {
       id: 1,
       comment: "",
@@ -123,8 +125,13 @@ const ratingDummy: Rating = {
   ]
 };
 
-export default function RatingModal() {
+type ResultProps = {
+  ratedPoi: PointOfInterest,
+}
+
+export default function RatingModal(props: ResultProps) {
   const classes = useStyles({});
+  const { ratedPoi } = props;
   const [rating, setRating] = React.useState<Rating>(ratingDummy);
   const dispatch = useDispatch();
   const [pageCount, setPageCount] = React.useState<number>(-1);
@@ -133,50 +140,64 @@ export default function RatingModal() {
     (state: any) => state.ratingStore.modalOpen
   );
 
+  useEffect(() => {
+    if ( toggleModal ) {
+      let oldRating: Rating = ratingDummy;
+      oldRating.poi = ratedPoi;
+      setRating(oldRating);
+      setPageCount(-1);
+      setSkipNextQuestion(false);
+    }
+ }, [toggleModal]);
+
+ useEffect(() => {
+   checkFollowUpQuestions();
+}, [rating]);
+
   const setPageRating = (checkedBox: RatingOptions) => {
     // deep copy of state object
     let oldRating: Rating = JSON.parse(JSON.stringify(rating));
-    oldRating.categoryRatings[pageCount].rating = checkedBox;
+    oldRating.categorieRatings[pageCount].rating = checkedBox;
     setRating(oldRating);
   };
 
-  useEffect(() => {
-    checkFollowUpQuestions();
- }, [rating]);
-
   const setPageRatingText = (text: string) => {
     let oldRating: Rating = JSON.parse(JSON.stringify(rating));
-    oldRating.categoryRatings[pageCount].comment = text;
+    oldRating.categorieRatings[pageCount].comment = text;
     setRating(oldRating);
   };
 
   const addTag = (tag: string) => {
     let oldRating: Rating = JSON.parse(JSON.stringify(rating));
-    oldRating.categoryRatings[pageCount].tag.push(tag);
+    oldRating.categorieRatings[pageCount].tag.push(tag);
     setRating(oldRating);
   };
   
   const removeTag = (tag: string) => {
     let oldRating: Rating = JSON.parse(JSON.stringify(rating));
-    const filteredTags = oldRating.categoryRatings[pageCount].tag.filter(e => e !== tag);
-    oldRating.categoryRatings[pageCount].tag = filteredTags;
+    const filteredTags = oldRating.categorieRatings[pageCount].tag.filter(e => e !== tag);
+    oldRating.categorieRatings[pageCount].tag = filteredTags;
     setRating(oldRating);
   };
 
   const checkFollowUpQuestions = (incrementor = 1) => {
-    const followUpQuestions =
-      rating.categoryRatings[pageCount + incrementor].question.followUpQuestions;
-    let relevantQuestions: CategoryRating[] = [];
-    followUpQuestions.forEach(filterId => {
-      const matchingRating = rating.categoryRatings.filter(categoryRating => {
-        return categoryRating.id === filterId;
+    if (rating.categorieRatings[pageCount + incrementor] === undefined) {
+      setSkipNextQuestion( false );
+    } else {
+      const followUpQuestions =
+        rating.categorieRatings[pageCount + incrementor].question.followUpQuestions;
+      let relevantQuestions: CategoryRating[] = [];
+      followUpQuestions.forEach(filterId => {
+        const matchingRating = rating.categorieRatings.filter(categoryRating => {
+          return categoryRating.id === filterId;
+        });
+        relevantQuestions = matchingRating;
       });
-      relevantQuestions = matchingRating;
-    });
-    const skipQuestion = relevantQuestions.some(
-      rating => rating.rating === RatingOptions.FALSE
-    );
-    setSkipNextQuestion( skipQuestion);
+      const skipQuestion = relevantQuestions.some(
+        rating => rating.rating === RatingOptions.FALSE
+      );
+      setSkipNextQuestion( skipQuestion);
+    }
   };
 
   const handleNext = () => {
@@ -195,7 +216,7 @@ export default function RatingModal() {
     }
   };
 
-  const maxPages = rating.categoryRatings.length + 1;
+  const maxPages = rating.categorieRatings.length + 1;
 
   return (
     <div className={classes.root}>
@@ -225,10 +246,10 @@ export default function RatingModal() {
           <Card className={classes.modalContent}>
             <CardContent>
               {pageCount === -1 ? (
-                <IntroductionView currentUniversity={rating.pointOfInterest} />
+                <IntroductionView currentUniversity={rating.poi} />
               ) : pageCount < maxPages - 1 ? (
                 <RatingView
-                  currentPage={rating.categoryRatings[pageCount]}
+                  currentPage={rating.categorieRatings[pageCount]}
                   setPageRating={setPageRating}
                   setPageText={setPageRatingText}
                   addTag={addTag}
@@ -253,7 +274,10 @@ export default function RatingModal() {
                     size="small"
                     onClick={
                       pageCount === maxPages - 2
-                        ? () => dispatch(addRating(rating))
+                        ? () => {
+                          setPageCount( pageCount + 1);
+                          dispatch(addRating(rating));
+                        }
                         : handleNext
                     }
                     disabled={pageCount === maxPages - 1}
