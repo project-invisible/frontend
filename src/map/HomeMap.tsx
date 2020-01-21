@@ -40,7 +40,7 @@ export default function HomeMap() {
         zoom={mapAttributes.zoom}
         className={classes.root}
         zoomControl={false}
-        onMoveEnd={() => childRef.current.callUpdate()}
+        onMoveEnd={() => childRef.current ? childRef.current.callUpdate() : null}
       >
         <ZoomControl position="bottomright" />
         <TileLayer

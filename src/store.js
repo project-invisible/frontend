@@ -1,9 +1,10 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import registerStore from './register/registerStore.tsx';
-import switchLayerStore from './map/SwitchLayerReducer.ts';
-import detailsStore from './map/DetailsReducer.ts';
-import searchStore from './map/SearchReducer.ts';
+import switchLayerStore from './map/SwitchLayerReducer';
+import detailsStore from './map/DetailsReducer';
+import searchStore from './map/SearchReducer';
+import ratingStore from './rating/RatingReducer';
 
 
 const store = createStore(
@@ -11,7 +12,8 @@ const store = createStore(
     registerStore,
     switchLayerStore,
     detailsStore,
-    searchStore
+    searchStore,
+    ratingStore,
   }),
   applyMiddleware(thunk)
 );

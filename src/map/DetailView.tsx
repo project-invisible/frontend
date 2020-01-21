@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { PointOfInterest } from "../types/PointOfInterest";
+import RatingModal from "../rating/RatingModal";
 
 export default function DetailView() {
   const detail: PointOfInterest = useSelector(
@@ -34,9 +35,7 @@ export default function DetailView() {
           </Typography>
         )}
       </CardContent>
-      <CardActions>
-        <Button size="small">Rate</Button>
-      </CardActions>
+      <RatingModal ratedPoi={detail} />
     </Card>
   );
 }

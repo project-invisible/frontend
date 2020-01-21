@@ -5,6 +5,7 @@ import { Card, CardContent, Typography, CardActions } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
 import { PointOfInterest } from '../types/PointOfInterest';
+import RatingModal from './../rating/RatingModal';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
