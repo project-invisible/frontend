@@ -28,6 +28,7 @@ const useStyles = makeStyles({});
 const PointsOfInterest = forwardRef((props, ref) => {
   const classes = useStyles({});
   const dispatch = useDispatch();
+  const { map } = useLeaflet();
 
   const [filteredMarkers, setFilteredMarkers] = useState<
     Array<PointOfInterest>
@@ -50,28 +51,40 @@ const PointsOfInterest = forwardRef((props, ref) => {
     (state: any) => state.searchStore.searchResults
   );
 
+  const poiChecked: boolean = useSelector(
+    (state: any) => state.switchLayerStore.poiChecked
+  );
+  const entryChecked: boolean = useSelector(
+    (state: any) => state.switchLayerStore.entryChecked
+  );
+  const allPOIs: Array<PointOfInterest> = useSelector(
+    (state: any) => state.searchStore.allPois
+  );
+  const finishedFirstLoading: number = useSelector(
+    (state: any) => state.searchStore.finishedFirstLoading
+  );
+
   useEffect(() => {
     dispatch(getAllPOIs());
     updateMarkers();
   }, []);
 
-  const finishedFirstLoading: number = useSelector(
-    (state: any) => state.searchStore.finishedFirstLoading
-  );
+  useEffect(() => {
+    if(poiChecked) {
+      dispatch(getAllPOIs());
+      updateMarkers();
+    }
+  }, [poiChecked]);
+
   useEffect(() => {
     if (finishedFirstLoading === 1 && initialLoad === false) {
       updateMarkers();
       setInitialLoad(true);
-    } else if (searchResults.length > 0 && finishedSearchLoading ) {
+    } else if (searchResults.length > 0 && finishedSearchLoading) {
       updateMarkers();
       dispatch(toggleSearchLoading(false));
     }
   });
-
-  const { map } = useLeaflet();
-  const allPOIs: Array<PointOfInterest> = useSelector(
-    (state: any) => state.searchStore.allPois
-  );
 
   const updateMarkers = () => {
     const pois = searchResults.length > 0 ? searchResults : allPOIs;
