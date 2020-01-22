@@ -22,8 +22,9 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1
   },
+
   header: {
-    background: 'linear-gradient(-90deg, #FF83FF, #509CFE)'
+    background: 'linear-gradient(-90deg, #FF66c4, #509CFE)'
   }
 }));
 

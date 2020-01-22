@@ -5,27 +5,6 @@ cache:
   directories:
     - node_modules
 script:
-<<<<<<< HEAD
-- npm install
-- npm test
-before_install:
-- openssl aes-256-cbc -K $encrypted_111186c124b5_key -iv $encrypted_111186c124b5_iv
-  -in travis_rsa.enc -out travis_rsa -d
-- eval "$(ssh-agent -s)"
-- chmod 600 travis_rsa
-- ssh-add travis_rsa
-after_success:
-  - npm run build
-deploy:
-  provider: script
-  skip_cleanup: true
-  script: 
-    ssh  -i travis_rsa -o StrictHostKeyChecking=no travis@invisible.f4.htw-berlin.de
-    scp $TRAVIS_BUILD_DIR/public travis@invisible.f4.htw-berlin.de:/home
-  on:
-    branch: master
-=======
   - npm install
   - npm test 
 
->>>>>>> origin/develop
