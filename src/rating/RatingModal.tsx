@@ -17,6 +17,7 @@ import { openModal, addRating } from "./RatingReducer";
 import { Status, Role } from "../types/User";
 import { PointOfInterest } from './../types/PointOfInterest';
 import Result from './../map/SearchResult';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -136,6 +137,10 @@ export default function RatingModal(props: ResultProps) {
   const dispatch = useDispatch();
   const [pageCount, setPageCount] = React.useState<number>(-1);
   const [skipNextQuestion, setSkipNextQuestion] = React.useState<boolean>(false);
+  const maxPages = rating.categorieRatings.length + 1;
+  const history = useHistory();
+  const token: string = useSelector((state: any) => state.registerStore.token);
+  const userId: number = useSelector((state: any) => state.registerStore.id);
   const toggleModal: boolean = useSelector(
     (state: any) => state.ratingStore.modalOpen
   );
@@ -144,6 +149,7 @@ export default function RatingModal(props: ResultProps) {
     if ( toggleModal ) {
       let oldRating: Rating = ratingDummy;
       oldRating.poi = ratedPoi;
+      oldRating.user.id = userId;
       setRating(oldRating);
       setPageCount(-1);
       setSkipNextQuestion(false);
@@ -216,7 +222,13 @@ export default function RatingModal(props: ResultProps) {
     }
   };
 
-  const maxPages = rating.categorieRatings.length + 1;
+  const checkLoginOpenModal = () => {
+    if ( token && token !== '' ) {
+      dispatch(openModal(true));
+    } else {
+      history.push('/login');
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -224,7 +236,7 @@ export default function RatingModal(props: ResultProps) {
         <Button
           size="small"
           onClick={() => {
-            dispatch(openModal(true));
+            checkLoginOpenModal();
           }}
         >
           Rate

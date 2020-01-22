@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { useDispatch } from "react-redux";
-import { loginUser } from "./loginStore";
+import { useDispatch, useSelector } from "react-redux";
 import { Grid } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import { loginUser } from './../register/registerStore';
 
 const useStyles = makeStyles({
   root: {
@@ -41,10 +41,19 @@ function Register() {
   const dispatch = useDispatch();
   let history = useHistory();
 
+  const token: string = useSelector((state: any) => state.registerStore.token);
+  const error: string = useSelector((state: any) => state.registerStore.error);
+
   const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(loginUser(email, password));
   };
+
+  useEffect(() => {
+    if (token !== "" && token !== null) {
+      history.push("");
+    }
+  });
 
   return (
     <Paper className={classes.root}>
@@ -100,6 +109,11 @@ function Register() {
             >
               Register
             </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body2" color="error">
+              {error}
+            </Typography>
           </Grid>
         </Grid>
       </form>
