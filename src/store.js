@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import registerStore from './register/registerStore.tsx';
+import registerStore from './register/registerStore';
 import switchLayerStore from './map/SwitchLayerReducer';
 import detailsStore from './map/DetailsReducer';
 import searchStore from './map/SearchReducer';
