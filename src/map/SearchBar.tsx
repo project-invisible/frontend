@@ -116,7 +116,7 @@ export default function SearchBar() {
           </IconButton>
         </form>
         {
-          searchResults.length > 0 && (
+          (searchResults.length > 0 && !showDetails) && (
             <div className={classes.result}>
               {
                 searchResults.slice(paginationStart, paginationEnd).map( (result, i) => {

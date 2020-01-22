@@ -69,9 +69,52 @@ const ratingDummy: Rating = {
     description: "sdff",
     email: "",
     name: "",
-    overallRating: 2,
     postal: 123,
-    website: ""
+    website: "",
+    overallRatingPerQuestion: [
+      {
+        question: {
+          id: 1,
+          category: {
+            id: 2,
+            name: "Category 1"
+          },
+          subCategory: {
+            id: 3,
+            name: "Subcategory 2",
+            category: {
+              id: 2,
+              name: "Category 1"
+            },
+          },
+          followUpQuestions: [],
+          hasCheckbox: true,
+          text: "Does the university have an equality officer?"
+        },
+        rating: 0.89
+      },
+      {
+        question: {
+          id: 2,
+          category: {
+            id: 2,
+            name: "Category 1"
+          },
+          subCategory: {
+            id: 3,
+            name: "Subcategory 2",
+            category: {
+              id: 2,
+              name: "Category 1"
+            },
+          },
+          followUpQuestions: [],
+          hasCheckbox: true,
+          text: "Do you feel treated well?"
+        },
+        rating: 0.43
+      }
+    ]
   },
   categorieRatings: [
     {
