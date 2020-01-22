@@ -19,7 +19,7 @@ import {
 import { LatLngExpression, Icon } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPOIs } from "./SearchReducer";
+import { getAllPOIs, toggleSearchLoading } from "./SearchReducer";
 import detailsStore, { getDetails } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
 
@@ -42,6 +42,14 @@ const PointsOfInterest = forwardRef((props, ref) => {
     (state: any) => state.detailsStore.detailPOI
   );
 
+  const finishedSearchLoading: boolean = useSelector(
+    (state: any) => state.searchStore.finishedSearchLoading
+  );
+
+  const searchResults: Array<PointOfInterest> = useSelector(
+    (state: any) => state.searchStore.searchResults
+  );
+
   useEffect(() => {
     dispatch(getAllPOIs());
     updateMarkers();
@@ -55,6 +63,9 @@ const PointsOfInterest = forwardRef((props, ref) => {
     if (finishedFirstLoading === 1 && initialLoad === false) {
       updateMarkers();
       setInitialLoad(true);
+    } else if (searchResults.length > 0 && finishedSearchLoading ) {
+      updateMarkers();
+      dispatch(toggleSearchLoading(false));
     }
   });
 
@@ -69,12 +80,10 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const allPOIs: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.allPois
   );
-  const searchResults: Array<PointOfInterest> = useSelector(
-    (state: any) => state.searchStore.searchResults
-  );
 
   const updateMarkers = () => {
-    const tempMarkers = allPOIs.filter(poi => {
+    const pois = searchResults.length > 0 ? searchResults : allPOIs;
+    const tempMarkers = pois.filter(poi => {
       const coordinates: LatLngExpression = [
         poi.coordinates.y,
         poi.coordinates.x
@@ -93,28 +102,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
   return (
     <>
       <LayerGroup>
-        {searchResults.length > 0 && map.getZoom() > 5 ? (
-          searchResults.map((poi, index) => {
-            const coordinates: LatLngExpression = [
-              poi.coordinates.y,
-              poi.coordinates.x
-            ];
-            return (
-              <Marker
-                key={index}
-                position={coordinates}
-                icon={markerIcon}
-                onClick={() =>
-                  showDetails
-                    ? dispatch(getDetails(!(poi.id === detail.id), poi.id))
-                    : dispatch(getDetails(true, poi.id))
-                }
-              >
-                <Popup>{poi.name}</Popup>
-              </Marker>
-            );
-          })
-        ) : allPOIs && map.getZoom() > 5 ? (
+        {filteredMarkers && map.getZoom() > 5 ? (
           filteredMarkers.map((poi, index) => {
             const coordinates: LatLngExpression = [
               poi.coordinates.y,

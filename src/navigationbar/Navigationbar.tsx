@@ -9,13 +9,15 @@ import {
 } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { createBrowserHistory } from "history";
+import { Role } from "../types/User";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
   },
   profileButton: {
-    marginLeft: 'auto'
+    marginLeft: "auto"
   },
   title: {
     flexGrow: 1
@@ -25,24 +27,36 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const history = createBrowserHistory({forceRefresh:true});
+const history = createBrowserHistory({ forceRefresh: true });
 
 function Navigationbar() {
   const classes = useStyles({});
+  const role: Role = useSelector((state: any) => state.registerStore.userGroup);
+  const email: string = useSelector((state: any) => state.registerStore.email);
 
   return (
     <AppBar position="static" className={classes.header}>
       <Toolbar>
-      <Typography variant="h6" className={classes.title}>
-      IN_VISIBLE
-    </Typography>
-        <Button color="inherit" onClick={()=> history.push('/')}>Map</Button>
+        <Typography variant="h6" className={classes.title}>
+          IN_VISIBLE
+        </Typography>
+        <Button color="inherit" onClick={() => history.push("/")}>
+          Map
+        </Button>
         <Button color="inherit">Forum</Button>
-        <Button color="inherit" onClick={() => history.push('/events')}>Events</Button>
-        <Button color="inherit" onClick={() => history.push('/codeofconduct')}>Code of Conduct</Button>
-        <Button color="inherit" onClick={() => history.push('/faq')}>FAQ</Button>
+        <Button color="inherit" onClick={() => history.push("/events")}>
+          Events
+        </Button>
+        <Button color="inherit" onClick={() => history.push("/codeofconduct")}>
+          Code of Conduct
+        </Button>
+        <Button color="inherit" onClick={() => history.push("/faq")}>
+          FAQ
+        </Button>
         <Button color="inherit">Feedback</Button>
-        <Button color="inherit">Admin</Button>
+        {(role === Role.ADMIN || role === Role.MODERATOR) && (
+          <Button color="inherit">Admin</Button>
+        )}
         <IconButton
           className={classes.profileButton}
           color="inherit"
@@ -51,6 +65,13 @@ function Navigationbar() {
         >
           <AccountCircle />
         </IconButton>
+        {email && email !== "" ? (
+          <Typography variant="body2">{email}</Typography>
+        ) : (
+          <Button color="inherit" onClick={() => history.push("/login")}>
+            Login
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );

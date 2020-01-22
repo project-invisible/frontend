@@ -15,7 +15,7 @@ function App() {
   return (
     <Router history={history}>
       <Switch>
-        <Route exact path="/login" component={() => <div />} />
+        <Route exact path="/login" component={() => <Login />} />
         <Route exact path="/register" component={() => <Register />} />        
         <Route path="/" component={() => <Navigationbar />} />
       </Switch>

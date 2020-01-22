@@ -1,11 +1,11 @@
-sudo: true
 language: node_js
 node_js:
-- stable
+  - "stable"
 cache:
   directories:
-  - node_modules
+    - node_modules
 script:
+<<<<<<< HEAD
 - npm install
 - npm test
 before_install:
@@ -24,3 +24,8 @@ deploy:
     scp $TRAVIS_BUILD_DIR/public travis@invisible.f4.htw-berlin.de:/home
   on:
     branch: master
+=======
+  - npm install
+  - npm test 
+
+>>>>>>> origin/develop
