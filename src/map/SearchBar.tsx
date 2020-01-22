@@ -30,14 +30,10 @@ const useStyles = makeStyles((theme: Theme) =>
     iconButton: {
       padding: 10
     },
-    divider: {
-      height: 28,
-      margin: 4
-    },
     result: {
-      overflowY: "scroll",
+      overflowY: "auto",
       width: 400,
-      height: "calc(100vh - 20vh)"
+      height: "calc( 100vh - 20vh)"
     }
   })
 );
@@ -100,13 +96,15 @@ export default function SearchBar() {
 
   const handleClick = event => {
     event.preventDefault();
-    dispatch(searchPOI(searchQuery));
-    dispatch(closeDetailView(false));
+    if (searchQuery !== "") {
+      dispatch(searchPOI(searchQuery));
+      dispatch(closeDetailView(false));
+    }
   };
 
   const resetSearchOnClick = () => {
     dispatch(resetSearch());
-    setSearchQuery('');
+    setSearchQuery("");
   };
 
   const search = (
@@ -127,19 +125,19 @@ export default function SearchBar() {
           <SearchIcon />
         </IconButton>
         {searchResults.length > 0 && (
-          <IconButton
-            onClick={() => resetSearchOnClick()}
-            className={classes.iconButton}
-            aria-label="search"
-          >
-            <Close />
-          </IconButton>
+            <IconButton
+              onClick={() => resetSearchOnClick()}
+              className={classes.iconButton}
+              aria-label="search"
+            >
+              <Close />
+            </IconButton>
         )}
       </form>
-      {searchResults.length > 0 && (
+      {searchResults.length > 0 && !showDetails && (
         <div className={classes.result}>
           {searchResults
-            .slice(paginationStart, paginationEnd)
+            .slice(paginationStart, paginationEnd + 1)
             .map((result, i) => {
               return <Result key={i} result={result} />;
             })}

@@ -63,7 +63,6 @@ export const getRatingsForPoi = (poiId: number) => async (
       `http://localhost:8182/rating/newest/${poiId}`
     );
     const result = await response.json();
-    console.log(result);
     dispatch({
       type: GET_RATINGS_POI,
       result
