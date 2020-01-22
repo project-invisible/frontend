@@ -61,8 +61,14 @@ function Navigationbar() {
           aria-controls="menu-appbar"
         >
           <AccountCircle />
-          <Typography variant="body2">{email}</Typography>
         </IconButton>
+        {email && email !== "" ? (
+          <Typography variant="body2">{email}</Typography>
+        ) : (
+          <Button color="inherit" onClick={() => history.push("/login")}>
+            Login
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );
