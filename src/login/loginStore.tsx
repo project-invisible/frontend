@@ -1,42 +1,50 @@
+import { createStore } from "redux";
 
-import { createStore } from 'redux';
+export const LOGIN = "LOGIN";
 
-export const LOGIN = 'LOGIN'
+const initialState = {};
 
-const initialState = {
-  };
-
-  /**
-   * Reducer
-   */
-  const loginStore = (state = initialState, action) => {
-    switch (action.type) {
-      case LOGIN:
-        return state;
-    }
-    return state;
+/**
+ * Reducer
+ */
+const loginStore = (state = initialState, action) => {
+  switch (action.type) {
+    case LOGIN:
+      return state;
   }
-  
-  /**
+  return state;
+};
+
+/**
  * Actions
  */
-export const loginUser = (username: String, password: String) => async (dispatch, getState) => {
-    try {
-        // no backend yet
-    //   const response = await fetch(`localhost:3000/api/register`);
-       const jwtToken = "test";
-        console.log("Token: ", jwtToken);
-        return {
-            type: LOGIN,
-            jwtToken: jwtToken,
-        }
-    } catch (error) {
-        console.log("throwing Error", error);
-        throw error;
-    }
-  };
+export const loginUser = (
+  email: String,
+  password: String
+) => async (dispatch, getState) => {
+  try {
+    const body = JSON.stringify({
+      email,
+      password
+    });
+    const response = await fetch(`http://localhost:8182/authenticate`, {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body
+    });
+    const jwtToken = "test";
+    console.log("Token: ", jwtToken);
+    dispatch({
+      type: LOGIN,
+      jwtToken: jwtToken
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
 
-  /**
-   * Store
-   */
-  export default loginStore;
+/**
+ * Store
+ */
+export default loginStore;
