@@ -2,10 +2,12 @@ import { Rating } from "../types/Rating";
 
 export const ADD_RATING = "ADD_RATING";
 export const TOGGLE_MODAL = "OPEN_MODAL";
+export const GET_RATINGS_POI = "GET_RATINGS_POI";
 
 const initialState = {
   rating: [],
   modalOpen: false,
+  ratingsForPoi: []
 };
 
 /**
@@ -15,12 +17,17 @@ const ratingStore = (state = initialState, action) => {
   switch (action.type) {
     case ADD_RATING:
       return {
-        ...state,
+        ...state
       };
     case TOGGLE_MODAL:
       return {
         ...state,
         modalOpen: action.toggleModal
+      };
+    case GET_RATINGS_POI:
+      return {
+        ...state,
+        ratingsForPoi: action.result
       };
   }
   return state;
@@ -40,6 +47,26 @@ export const addRating = (rating: Rating) => async (dispatch, getState) => {
     const result = await response.json();
     dispatch({
       type: ADD_RATING
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
+
+export const getRatingsForPoi = (poiId: number) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8182/rating/newest/${poiId}`
+    );
+    const result = await response.json();
+    console.log(result);
+    dispatch({
+      type: GET_RATINGS_POI,
+      result
     });
   } catch (error) {
     console.log("throwing Error", error);

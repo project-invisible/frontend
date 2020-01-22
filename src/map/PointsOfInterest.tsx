@@ -19,7 +19,7 @@ import {
 import { LatLngExpression } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPOIs, toggleSearchLoading } from "./SearchReducer";
+import { getAllPOIs, toggleSearchLoading, toggleResetSearch } from "./SearchReducer";
 import detailsStore, { getDetails } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
 
@@ -50,14 +50,20 @@ const PointsOfInterest = forwardRef((props, ref) => {
     (state: any) => state.searchStore.searchResults
   );
 
+  const finishedFirstLoading: number = useSelector(
+    (state: any) => state.searchStore.finishedFirstLoading
+  );
+
+  
+  const resetSearch: boolean = useSelector(
+    (state: any) => state.searchStore.resetSearch
+  );
+
   useEffect(() => {
     dispatch(getAllPOIs());
     updateMarkers();
   }, []);
 
-  const finishedFirstLoading: number = useSelector(
-    (state: any) => state.searchStore.finishedFirstLoading
-  );
   useEffect(() => {
     if (finishedFirstLoading === 1 && initialLoad === false) {
       updateMarkers();
@@ -65,6 +71,9 @@ const PointsOfInterest = forwardRef((props, ref) => {
     } else if (searchResults.length > 0 && finishedSearchLoading ) {
       updateMarkers();
       dispatch(toggleSearchLoading(false));
+    } else if (resetSearch) {
+      updateMarkers();
+      dispatch(toggleResetSearch(false));
     }
   });
 
