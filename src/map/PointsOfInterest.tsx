@@ -26,6 +26,7 @@ import {
 } from "./SearchReducer";
 import detailsStore, { getDetails } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
+import { toggleEntryDetailView } from "../entries/EntryDetailsReducer";
 
 const useStyles = makeStyles({});
 
@@ -58,7 +59,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const poiChecked: boolean = useSelector(
     (state: any) => state.switchLayerStore.poiChecked
   );
- 
+
   const allPOIs: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.allPois
   );
@@ -70,7 +71,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const resetSearch: boolean = useSelector(
     (state: any) => state.searchStore.resetSearch
   );
-  
+
   useEffect(() => {
     dispatch(getAllPOIs());
     updateMarkers();
@@ -118,6 +119,11 @@ const PointsOfInterest = forwardRef((props, ref) => {
     setFilteredMarkers(tempMarkers);
   };
 
+  const openEntryDetailView = (entryId: number) => {
+    dispatch(getDetails(true, entryId));
+    dispatch(toggleEntryDetailView(false));
+  };
+
   useImperativeHandle(ref, () => ({
     callUpdate() {
       updateMarkers();
@@ -141,7 +147,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
                 onClick={() =>
                   showDetails
                     ? dispatch(getDetails(!(poi.id === detail.id), poi.id))
-                    : dispatch(getDetails(true, poi.id))
+                    : openEntryDetailView(poi.id)
                 }
               >
                 <Popup>{poi.name}</Popup>

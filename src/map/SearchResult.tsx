@@ -33,7 +33,6 @@ export default function Result(props: ResultProps) {
 
   const { map } = useLeaflet();
 
-
   const handleShowDetails = () => {
     dispatch(getDetails(true, result.id));
     map.flyTo([result.coordinates.y, result.coordinates.x], 12);

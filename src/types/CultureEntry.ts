@@ -10,4 +10,7 @@ export interface CultureEntry {
   };
   creationDate: Date;
   user: User;
+  image?: {
+    data: string;
+  }
 }

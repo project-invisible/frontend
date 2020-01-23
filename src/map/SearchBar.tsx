@@ -158,7 +158,7 @@ export default function SearchBar() {
   };
 
   const displayEntryResults = (searchResults: CultureEntry[]) => {
-    return searchResults && searchResults.length > 0 && !showDetails ? (
+    return searchResults && searchResults.length > 0 && !showEntryDetails ? (
       <div className={classes.result}>
         {searchResults
           .slice(paginationStart, paginationEnd + 1)
