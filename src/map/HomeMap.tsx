@@ -9,6 +9,8 @@ import SearchBar from "./SearchBar";
 import Control from "react-leaflet-control";
 import SwitchLayer from "./SwitchLayer";
 import PointsOfInterest from "./PointsOfInterest";
+import CultureEntries from "./CultureEntries";
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
   root: {
@@ -25,6 +27,7 @@ export default function HomeMap() {
   const classes = useStyles({});
 
   const childRef = useRef(null);
+  const entriesRef = useRef(null);
 
   const mapAttributes = {
     lat: 52.5137,
@@ -33,6 +36,13 @@ export default function HomeMap() {
   };
   const position: LatLngExpression = [mapAttributes.lat, mapAttributes.lng];
 
+  const poiChecked: boolean = useSelector(
+    (state: any) => state.switchLayerStore.poiChecked
+  );
+  const entryChecked: boolean = useSelector(
+    (state: any) => state.switchLayerStore.entryChecked
+  );
+
   return (
     <>
       <Map
@@ -40,7 +50,10 @@ export default function HomeMap() {
         zoom={mapAttributes.zoom}
         className={classes.root}
         zoomControl={false}
-        onMoveEnd={() => childRef.current ? childRef.current.callUpdate() : null}
+        onMoveEnd={() => {
+          childRef.current ? childRef.current.callUpdate() : null;
+          entriesRef.current ? entriesRef.current.callUpdate() : null
+        }}
       >
         <ZoomControl position="bottomright" />
         <TileLayer
@@ -53,7 +66,16 @@ export default function HomeMap() {
         <Control position="topleft">
           <SwitchLayer />
         </Control>
-        <PointsOfInterest ref={childRef} />
+        {
+          poiChecked && (
+            <PointsOfInterest ref={childRef} />
+          )
+        }
+        {
+          entryChecked && (
+            <CultureEntries ref={entriesRef} />
+          )
+        }
       </Map>
     </>
   );

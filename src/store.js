@@ -5,6 +5,7 @@ import switchLayerStore from './map/SwitchLayerReducer';
 import detailsStore from './map/DetailsReducer';
 import searchStore from './map/SearchReducer';
 import ratingStore from './rating/RatingReducer';
+import entryDetailsStore from './entries/EntryDetailsReducer';
 
 
 const store = createStore(
@@ -14,6 +15,7 @@ const store = createStore(
     detailsStore,
     searchStore,
     ratingStore,
+    entryDetailsStore,
   }),
   applyMiddleware(thunk)
 );

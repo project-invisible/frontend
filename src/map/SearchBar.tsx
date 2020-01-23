@@ -9,19 +9,25 @@ import { DomEvent } from "leaflet";
 import { useDispatch, useSelector } from "react-redux";
 import DetailView from "./DetailView";
 import { closeDetailView } from "./DetailsReducer";
-import { searchPOI, resetSearch } from "./SearchReducer";
+import { searchPOI, searchEntries, resetSearch } from "./SearchReducer";
 import TextField from "@material-ui/core/TextField";
 import { PointOfInterest } from "../types/PointOfInterest";
 import { TablePagination } from "@material-ui/core";
+import EntriesDetailView from "./../entries/EntriesDetailView";
+import { CultureEntry } from "./../types/CultureEntry";
+import EntrySearchResults from "./../entries/EntrySearchResults";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: "2px 4px",
       display: "flex",
       alignItems: "center",
       width: 400,
       zIndex: 5000
+    },
+    paperRoot: {
+      padding: "0.5em"
     },
     input: {
       marginLeft: theme.spacing(1),
@@ -41,10 +47,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function SearchBar() {
   const classes = useStyles({});
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [paginationStart, setPaginationStart] = useState<number>(0);
   const [paginationEnd, setPaginationEnd] = useState<number>(4);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+
+  const poiChecked: boolean = useSelector(
+    (state: any) => state.switchLayerStore.poiChecked
+  );
+  const entryChecked: boolean = useSelector(
+    (state: any) => state.switchLayerStore.entryChecked
+  );
 
   const nextPage = () => {
     setPaginationEnd(paginationEnd + rowsPerPage);
@@ -81,9 +95,16 @@ export default function SearchBar() {
   const showDetails: boolean = useSelector(
     (state: any) => state.detailsStore.showDetails
   );
+  const showEntryDetails: boolean = useSelector(
+    (state: any) => state.entryDetailsStore.showEntryDetails
+  );
 
   const searchResults: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.searchResults
+  );
+
+  const searchEntryResults: Array<CultureEntry> = useSelector(
+    (state: any) => state.searchStore.searchEntryResults
   );
 
   const refContainer = element => {
@@ -96,30 +117,94 @@ export default function SearchBar() {
 
   const handleClick = event => {
     event.preventDefault();
-    if (searchQuery !== "") {
-      dispatch(searchPOI(searchQuery));
+    if (poiChecked && entryChecked) {
+      setErrorMessage("Please only select one category if you want to search!");
+    } else if (searchQuery !== "") {
+      if (poiChecked) {
+        dispatch(searchPOI(searchQuery));
+      }
+      if (entryChecked) {
+        dispatch(searchEntries(searchQuery));
+      }
       dispatch(closeDetailView(false));
     }
   };
 
+  const displayResults = (searchResults: PointOfInterest[]) => {
+    return searchResults && searchResults.length > 0 && !showDetails ? (
+      <div className={classes.result}>
+        {searchResults
+          .slice(paginationStart, paginationEnd + 1)
+          .map((result, i) => {
+            return <Result key={i} result={result} />;
+          })}
+        <TablePagination
+          component="div"
+          count={searchResults.length}
+          rowsPerPageOptions={[5, 10, 25]}
+          page={page}
+          onChangePage={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+          SelectProps={{
+            inputProps: { "aria-label": "rows per page" },
+            native: true
+          }}
+        />
+      </div>
+    ) : (
+      <div />
+    );
+  };
+
+  const displayEntryResults = (searchResults: CultureEntry[]) => {
+    return searchResults && searchResults.length > 0 && !showDetails ? (
+      <div className={classes.result}>
+        {searchResults
+          .slice(paginationStart, paginationEnd + 1)
+          .map((result, i) => {
+            return <EntrySearchResults key={i} result={result} />;
+          })}
+        <TablePagination
+          component="div"
+          count={searchResults.length}
+          rowsPerPageOptions={[5, 10, 25]}
+          page={page}
+          onChangePage={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+          SelectProps={{
+            inputProps: { "aria-label": "rows per page" },
+            native: true
+          }}
+        />
+      </div>
+    ) : (
+      <div />
+    );
+  };
+
   const handleOnChange = event => {
     setSearchQuery(event.target.value);
-  }
-    
+  };
+
   const resetSearchOnClick = () => {
     dispatch(resetSearch());
     setSearchQuery("");
   };
 
   const search = (
-    <Paper ref={refContainer}>
+    <Paper ref={refContainer} className={classes.paperRoot}>
       <form onSubmit={handleClick} className={classes.root}>
         <TextField
           className={classes.input}
           placeholder="Search IN_VISIBLE"
           value={searchQuery}
           inputProps={{ "aria-label": "search invisible" }}
-          onChange={event => setSearchQuery(event.target.value)}
+          onChange={event => {
+            setErrorMessage("");
+            setSearchQuery(event.target.value);
+          }}
         />
         <IconButton
           type="submit"
@@ -129,39 +214,26 @@ export default function SearchBar() {
           <SearchIcon />
         </IconButton>
         {searchResults.length > 0 && (
-            <IconButton
-              onClick={() => resetSearchOnClick()}
-              className={classes.iconButton}
-              aria-label="search"
-            >
-              <Close />
-            </IconButton>
+          <IconButton
+            onClick={() => resetSearchOnClick()}
+            className={classes.iconButton}
+            aria-label="search"
+          >
+            <Close />
+          </IconButton>
         )}
       </form>
-      {searchResults.length > 0 && !showDetails && (
-        <div className={classes.result}>
-          {searchResults
-            .slice(paginationStart, paginationEnd + 1)
-            .map((result, i) => {
-              return <Result key={i} result={result} />;
-            })}
-          <TablePagination
-            component="div"
-            count={searchResults.length}
-            rowsPerPageOptions={[5, 10, 25]}
-            page={page}
-            onChangePage={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-            SelectProps={{
-              inputProps: { "aria-label": "rows per page" },
-              native: true
-            }}
-          />
-        </div>
+      {errorMessage !== "" && (
+        <Typography variant="body2" color="error">
+          {errorMessage}
+        </Typography>
       )}
+      {poiChecked && displayResults(searchResults)}
+      {entryChecked && displayEntryResults(searchEntryResults)}
       {showDetails && <DetailView />}
+      {showEntryDetails && <EntriesDetailView />}
     </Paper>
   );
+
   return search;
 }
