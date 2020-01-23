@@ -102,6 +102,10 @@ export default function SearchBar() {
     }
   };
 
+  const handleOnChange = event => {
+    setSearchQuery(event.target.value);
+  }
+    
   const resetSearchOnClick = () => {
     dispatch(resetSearch());
     setSearchQuery("");
@@ -159,6 +163,5 @@ export default function SearchBar() {
       {showDetails && <DetailView />}
     </Paper>
   );
-
   return search;
 }

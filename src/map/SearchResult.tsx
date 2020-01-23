@@ -6,6 +6,8 @@ import ThumbUp from "@material-ui/icons/ThumbUp";
 import { PointOfInterest } from "./../types/PointOfInterest";
 import { getDetails } from './DetailsReducer';
 import { useDispatch } from 'react-redux';
+import { useLeaflet } from "react-leaflet";
+import { marker } from "leaflet";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,6 +30,14 @@ export default function Result(props: ResultProps) {
   const classes = useStyles({});
   const { result } = props;
   const dispatch = useDispatch();
+
+  const { map } = useLeaflet();
+
+
+  const handleShowDetails = () => {
+    dispatch(getDetails(true, result.id));
+    map.flyTo([result.coordinates.y, result.coordinates.x], 12);
+  };
 
   return (
     <Card>
@@ -57,7 +67,7 @@ export default function Result(props: ResultProps) {
         </div>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => dispatch(getDetails(true, result.id))}>Learn More</Button>
+        <Button size="small" onClick={() => handleShowDetails()}>Learn More</Button>
       </CardActions>
     </Card>
   );

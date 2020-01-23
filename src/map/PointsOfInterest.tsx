@@ -16,7 +16,7 @@ import {
   Circle,
   useLeaflet
 } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
+import { LatLngExpression, Icon } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllPOIs, toggleSearchLoading, toggleResetSearch } from "./SearchReducer";
@@ -77,6 +77,13 @@ const PointsOfInterest = forwardRef((props, ref) => {
     }
   });
 
+  const markerIcon = new Icon({
+    iconUrl: require('../images/mapMarker.svg'),
+    iconSize: [25,41],
+    
+});
+
+
   const { map } = useLeaflet();
   const allPOIs: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.allPois
@@ -113,6 +120,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
               <Marker
                 key={index}
                 position={coordinates}
+                icon={markerIcon}
                 onClick={() =>
                   showDetails
                     ? dispatch(getDetails(!(poi.id === detail.id), poi.id))
