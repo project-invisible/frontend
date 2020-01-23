@@ -40,8 +40,8 @@ const CultureEntries = forwardRef((props, ref) => {
     (state: any) => state.entryDetailsStore.detailEntry
   );
 
-  const finishedSearchLoading: boolean = useSelector(
-    (state: any) => state.searchStore.finishedSearchLoading
+  const finishedEntrySearchLoading: boolean = useSelector(
+    (state: any) => state.searchStore.finishedEntrySearchLoading
   );
 
   const searchResults: Array<CultureEntry> = useSelector(
@@ -73,14 +73,14 @@ const CultureEntries = forwardRef((props, ref) => {
     if (finishedEntryLoading && initialLoad === false) {
       updateMarkers();
       setInitialLoad(true);
-    } else if (searchResults.length > 0 && finishedSearchLoading) {
+    } else if (searchResults && searchResults.length > 0 && finishedEntrySearchLoading) {
       updateMarkers();
       dispatch(toggleSearchLoading(false));
     }
   });
 
   const updateMarkers = () => {
-    const entries = searchResults.length > 0 ? searchResults : allEntries;
+    const entries = (searchResults && searchResults.length > 0) ? searchResults : allEntries;
     const tempMarkers = entries.filter(entry => {
       const coordinates: LatLngExpression = [entry.coords.y, entry.coords.x];
       return map.getBounds().contains(coordinates);

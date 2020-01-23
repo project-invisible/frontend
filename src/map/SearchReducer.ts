@@ -13,7 +13,8 @@ const initialState = {
   allEntries: [],
   finishedEntryLoading: false,
   finishedFirstLoading: 0,
-  finishedSearchLoading: false
+  finishedSearchLoading: false,
+  finishedEntrySearchLoading: false,
 };
 
 /**
@@ -31,7 +32,7 @@ const searchStore = (state = initialState, action) => {
       return {
         ...state,
         searchEntryResults: action.searchResults,
-        finishedSearchLoading: true
+        finishedEntrySearchLoading: true
       };
     case GET_POIS:
       const loadings = state.finishedFirstLoading + 1;

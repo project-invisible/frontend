@@ -80,14 +80,14 @@ const PointsOfInterest = forwardRef((props, ref) => {
     if (finishedFirstLoading === 1 && initialLoad === false) {
       updateMarkers();
       setInitialLoad(true);
-    } else if (searchResults.length > 0 && finishedSearchLoading) {
+    } else if (searchResults && searchResults.length > 0 && finishedSearchLoading) {
       updateMarkers();
       dispatch(toggleSearchLoading(false));
     }
   });
 
   const updateMarkers = () => {
-    const pois = searchResults.length > 0 ? searchResults : allPOIs;
+    const pois = (searchResults && searchResults.length > 0) ? searchResults : allPOIs;
     const tempMarkers = pois.filter(poi => {
       const coordinates: LatLngExpression = [
         poi.coordinates.y,
