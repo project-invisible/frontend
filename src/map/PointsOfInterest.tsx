@@ -64,10 +64,6 @@ const PointsOfInterest = forwardRef((props, ref) => {
     updateMarkers();
   }, []);
 
-  const finishedFirstLoading: number = useSelector(
-    (state: any) => state.searchStore.finishedFirstLoading
-  );
-
   useEffect(() => {
     if (finishedFirstLoading === 1 && initialLoad === false) {
       updateMarkers();
