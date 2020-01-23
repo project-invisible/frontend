@@ -58,7 +58,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const poiChecked: boolean = useSelector(
     (state: any) => state.switchLayerStore.poiChecked
   );
- 
+
   const allPOIs: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.allPois
   );
@@ -70,7 +70,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const resetSearch: boolean = useSelector(
     (state: any) => state.searchStore.resetSearch
   );
-  
+
   useEffect(() => {
     dispatch(getAllPOIs());
     updateMarkers();
@@ -101,8 +101,11 @@ const PointsOfInterest = forwardRef((props, ref) => {
   });
 
   const markerIcon = new Icon({
-    iconUrl: require("../images/mapMarker.svg"),
-    iconSize: [25, 41]
+    iconUrl: require("../images/uni_icon.svg"),
+    shadowUrl: require("../images/marker-shadow.svg"),
+    iconSize: [38, 95],
+    shadowSize: [18, 47], // size of the shadow
+    shadowAnchor: [18, 47] // the same for the shadow
   });
 
   const updateMarkers = () => {
