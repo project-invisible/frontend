@@ -16,10 +16,14 @@ import {
   Circle,
   useLeaflet
 } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
+import { LatLngExpression, Icon } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPOIs, toggleSearchLoading } from "./SearchReducer";
+import {
+  getAllPOIs,
+  toggleSearchLoading,
+  toggleResetSearch
+} from "./SearchReducer";
 import detailsStore, { getDetails } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
 
@@ -54,23 +58,26 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const poiChecked: boolean = useSelector(
     (state: any) => state.switchLayerStore.poiChecked
   );
-  const entryChecked: boolean = useSelector(
-    (state: any) => state.switchLayerStore.entryChecked
-  );
+ 
   const allPOIs: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.allPois
   );
+
   const finishedFirstLoading: number = useSelector(
     (state: any) => state.searchStore.finishedFirstLoading
   );
 
+  const resetSearch: boolean = useSelector(
+    (state: any) => state.searchStore.resetSearch
+  );
+  
   useEffect(() => {
     dispatch(getAllPOIs());
     updateMarkers();
   }, []);
 
   useEffect(() => {
-    if(poiChecked) {
+    if (poiChecked) {
       dispatch(getAllPOIs());
       updateMarkers();
     }
@@ -80,14 +87,27 @@ const PointsOfInterest = forwardRef((props, ref) => {
     if (finishedFirstLoading === 1 && initialLoad === false) {
       updateMarkers();
       setInitialLoad(true);
-    } else if (searchResults && searchResults.length > 0 && finishedSearchLoading) {
+    } else if (
+      searchResults &&
+      searchResults.length > 0 &&
+      finishedSearchLoading
+    ) {
       updateMarkers();
       dispatch(toggleSearchLoading(false));
+    } else if (resetSearch) {
+      updateMarkers();
+      dispatch(toggleResetSearch(false));
     }
   });
 
+  const markerIcon = new Icon({
+    iconUrl: require("../images/mapMarker.svg"),
+    iconSize: [25, 41]
+  });
+
   const updateMarkers = () => {
-    const pois = (searchResults && searchResults.length > 0) ? searchResults : allPOIs;
+    const pois =
+      searchResults && searchResults.length > 0 ? searchResults : allPOIs;
     const tempMarkers = pois.filter(poi => {
       const coordinates: LatLngExpression = [
         poi.coordinates.y,
@@ -117,6 +137,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
               <Marker
                 key={index}
                 position={coordinates}
+                icon={markerIcon}
                 onClick={() =>
                   showDetails
                     ? dispatch(getDetails(!(poi.id === detail.id), poi.id))

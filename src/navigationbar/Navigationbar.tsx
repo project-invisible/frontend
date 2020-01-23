@@ -21,6 +21,10 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+
+  header: {
+    background: 'linear-gradient(-90deg, #FF66c4, #509CFE)'
   }
 }));
 
@@ -32,7 +36,7 @@ function Navigationbar() {
   const email: string = useSelector((state: any) => state.registerStore.email);
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" className={classes.header}>
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           IN_VISIBLE

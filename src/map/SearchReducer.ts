@@ -6,7 +6,10 @@ export const GET_POIS = "GET_POIS";
 export const GET_ENTRIES = "GET_ENTRIES";
 export const TOGGLE_SEARCH_LOADING = "TOGGLE_SEARCH_LOADING";
 
+export const TOGGLE_RESET = 'TOGGLE_RESET'
+export const RESET_SEARCH = 'RESET_SEARCH'
 const initialState = {
+    resetSearch: false,
   searchResults: [],
   searchEntryResults: [],
   allPois: [],
@@ -52,6 +55,18 @@ const searchStore = (state = initialState, action) => {
         ...state,
         finishedSearchLoading: action.toggleLoading
       };
+        case TOGGLE_RESET: 
+          return {
+            ...state,
+            resetSearch: action.toggleReset,
+          }
+        case RESET_SEARCH:
+          return {
+            ...state,
+            searchResults: [],
+            finishedSearchLoading: false,
+            resetSearch: true,
+          }
   }
   return state;
 };
@@ -113,6 +128,29 @@ export const toggleSearchLoading = (toggleLoading: boolean) => async (
     throw error;
   }
 };
+  export const toggleResetSearch = (toggleReset: boolean ) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: TOGGLE_RESET,
+        toggleReset,
+      })
+    } catch (error) {
+        console.log("throwing Error", error);
+        throw error;
+    }
+  };
+
+  export const resetSearch = () => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: RESET_SEARCH,
+      })
+    } catch (error) {
+        console.log("throwing Error", error);
+        throw error;
+    }
+  };
+
 
 export const getAllPOIs = () => async (dispatch, getState) => {
   try {

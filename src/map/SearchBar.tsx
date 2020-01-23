@@ -3,12 +3,13 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
+import Close from "@material-ui/icons/Close";
 import Result from "./SearchResult";
 import { DomEvent } from "leaflet";
 import { useDispatch, useSelector } from "react-redux";
 import DetailView from "./DetailView";
 import { closeDetailView } from "./DetailsReducer";
-import { searchPOI, searchEntries } from "./SearchReducer";
+import { searchPOI, searchEntries, resetSearch } from "./SearchReducer";
 import TextField from "@material-ui/core/TextField";
 import { PointOfInterest } from "../types/PointOfInterest";
 import { TablePagination } from "@material-ui/core";
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       width: 400,
-      zIndex: 5000,
+      zIndex: 5000
     },
     paperRoot: {
       padding: "0.5em"
@@ -35,15 +36,11 @@ const useStyles = makeStyles((theme: Theme) =>
     iconButton: {
       padding: 10
     },
-    divider: {
-      height: 28,
-      margin: 4
-    },
     result: {
       overflowY: "auto",
       width: 400,
       height: "calc( 100vh - 20vh)"
-    },
+    }
   })
 );
 
@@ -187,6 +184,15 @@ export default function SearchBar() {
     );
   };
 
+  const handleOnChange = event => {
+    setSearchQuery(event.target.value);
+  };
+
+  const resetSearchOnClick = () => {
+    dispatch(resetSearch());
+    setSearchQuery("");
+  };
+
   const search = (
     <Paper ref={refContainer} className={classes.paperRoot}>
       <form onSubmit={handleClick} className={classes.root}>
@@ -196,7 +202,7 @@ export default function SearchBar() {
           value={searchQuery}
           inputProps={{ "aria-label": "search invisible" }}
           onChange={event => {
-            setErrorMessage('');
+            setErrorMessage("");
             setSearchQuery(event.target.value);
           }}
         />
@@ -207,12 +213,18 @@ export default function SearchBar() {
         >
           <SearchIcon />
         </IconButton>
+        {searchResults.length > 0 && (
+          <IconButton
+            onClick={() => resetSearchOnClick()}
+            className={classes.iconButton}
+            aria-label="search"
+          >
+            <Close />
+          </IconButton>
+        )}
       </form>
       {errorMessage !== "" && (
-        <Typography
-          variant="body2"
-          color="error"
-        >
+        <Typography variant="body2" color="error">
           {errorMessage}
         </Typography>
       )}
