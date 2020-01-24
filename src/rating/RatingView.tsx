@@ -37,6 +37,7 @@ type ResultProps = {
   setPageText: (text: string) => void;
   addTag: (string) => void;
   removeTag: (string) => void;
+  handleFollowUp: (RatingOptions) => void;
 };
 
 interface ChipData {
@@ -46,13 +47,16 @@ interface ChipData {
 
 export default function RatingView(props: ResultProps) {
   const classes = useStyles({});
-  const { currentPage, setPageRating, setPageText, addTag, removeTag } = props;
+  const { currentPage, setPageRating, setPageText, addTag, removeTag, handleFollowUp } = props;
   const [tag, setTag] = useState<string>("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value: RatingOptions =
       RatingOptions[(event.target as HTMLInputElement).value];
     setPageRating(value);
+    if (value !== RatingOptions.YES) {
+      handleFollowUp(value);
+    }
   };
 
   const onAddTag = () => {

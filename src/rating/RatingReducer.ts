@@ -3,11 +3,13 @@ import { Rating } from "../types/Rating";
 export const ADD_RATING = "ADD_RATING";
 export const TOGGLE_MODAL = "OPEN_MODAL";
 export const GET_RATINGS_POI = "GET_RATINGS_POI";
+export const GET_QUESTIONS = "GET_QUESTIONS";
 
 const initialState = {
   rating: [],
   modalOpen: false,
-  ratingsForPoi: []
+  ratingsForPoi: [],
+  questions: []
 };
 
 /**
@@ -29,6 +31,11 @@ const ratingStore = (state = initialState, action) => {
         ...state,
         ratingsForPoi: action.result
       };
+    case GET_QUESTIONS:
+      return {
+        ...state,
+        questions: action.result.questions
+      }
   }
   return state;
 };
@@ -47,6 +54,25 @@ export const addRating = (rating: Rating) => async (dispatch, getState) => {
     const result = await response.json();
     dispatch({
       type: ADD_RATING
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
+
+export const getQuestions = () => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8182/criteria`
+    );
+    const result = await response.json();
+    dispatch({
+      type: GET_QUESTIONS,
+      result
     });
   } catch (error) {
     console.log("throwing Error", error);

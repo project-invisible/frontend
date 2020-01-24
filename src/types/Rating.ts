@@ -1,10 +1,9 @@
 import { PointOfInterest } from './PointOfInterest';
-import { User } from './User';
 
 export interface Rating {
     id: number,
-    poi: PointOfInterest,
-    user: User,
+    poiId: number,
+    userId: number,
     generalComment: string,
     categorieRatings: CategoryRating[], 
     creationDate?: Date,
@@ -25,7 +24,7 @@ export interface Question {
     category: Category,
     subCategory: SubCategory,
     hasCheckbox: boolean;
-    followUpQuestions: number[],
+    followUpQuestion: number[],
 }
 
 export interface Category {

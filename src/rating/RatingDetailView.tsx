@@ -63,7 +63,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
               </Grid>
               <Grid item xs={11}>
                 <Typography variant="body2" component="p">
-                  {rating.user.email}
+                  {rating.userId}
                 </Typography>
               </Grid>
             </Grid>
