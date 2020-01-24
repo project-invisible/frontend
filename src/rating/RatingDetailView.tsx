@@ -15,12 +15,17 @@ import {
   Divider,
   RadioGroup
 } from "@material-ui/core";
+import ReportIcon from "@material-ui/icons/Report";
+import { postRatingReport } from "./../admin/AdminReducer";
+import { RatingReport } from "../types/Reports";
+import { useDispatch, useSelector } from "react-redux";
+import { User } from "./../types/User";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       overflowY: "auto",
-      width: 400,
+      width: 400
     },
     rating: {
       marginTop: "0.5em"
@@ -45,6 +50,21 @@ export interface RatingDetailViewProps {
 export default function RatingDetailView(props: RatingDetailViewProps) {
   const classes = useStyles({});
   const { rating, setDetailRating } = props;
+  const dispatch = useDispatch();
+  const user: User = useSelector((state: any) => state.registerStore.user);
+
+  const reportRating = () => {
+    if (user) {
+      const ratingReport: RatingReport = {
+        id: null,
+        reportingUser: user,
+        rating,
+        reportDate: null,
+        solved: false
+      };
+      dispatch(postRatingReport(ratingReport));
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -67,7 +87,15 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                 </Typography>
               </Grid>
             </Grid>
-            <Typography variant="body2">General comment: {rating.generalComment}</Typography>
+            <IconButton onClick={() => reportRating()}>
+              <Typography variant="body2" component="p">
+                {user ? `Report rating` : `Login to report rating`}
+              </Typography>
+              <ReportIcon />
+            </IconButton>
+            <Typography variant="body2">
+              General comment: {rating.generalComment}
+            </Typography>
             {rating.categorieRatings.map((categorieRating, index) => {
               return (
                 <div>

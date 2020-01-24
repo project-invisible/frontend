@@ -6,7 +6,7 @@ import detailsStore from './map/DetailsReducer';
 import searchStore from './map/SearchReducer';
 import ratingStore from './rating/RatingReducer';
 import entryDetailsStore from './entries/EntryDetailsReducer';
-
+import adminStore from './admin/AdminReducer';
 
 const store = createStore(
   combineReducers({
@@ -16,6 +16,7 @@ const store = createStore(
     searchStore,
     ratingStore,
     entryDetailsStore,
+    adminStore
   }),
   applyMiddleware(thunk)
 );

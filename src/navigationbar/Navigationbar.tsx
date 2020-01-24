@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
 
   header: {
-    background: 'linear-gradient(-90deg, #FF66c4, #509CFE)'
+    background: "linear-gradient(-90deg, #FF66c4, #509CFE)"
   }
 }));
 
@@ -56,7 +56,9 @@ function Navigationbar() {
         </Button>
         <Button color="inherit">Feedback</Button>
         {(role === Role.ADMIN || role === Role.MODERATOR) && (
-          <Button color="inherit">Admin</Button>
+          <Button color="inherit" onClick={() => history.push("/admin")}>
+            Admin
+          </Button>
         )}
         <IconButton
           className={classes.profileButton}
