@@ -121,7 +121,6 @@ export const addCultureEntry = (
       body: data
     });
     const result = await response.json();
-    console.log(result);
     dispatch({
       type: ADD_ENTRY
     });

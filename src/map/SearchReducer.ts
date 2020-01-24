@@ -66,6 +66,8 @@ const searchStore = (state = initialState, action) => {
       return {
         ...state,
         searchResults: [],
+        searchEntryResults: [],
+        finishedEntrySearchLoading: false,
         finishedSearchLoading: false,
         resetSearch: true
       };

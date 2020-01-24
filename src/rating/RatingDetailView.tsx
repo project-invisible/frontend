@@ -33,6 +33,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     questionText: {
       fontWeight: 600
+    },
+    iconButton: {
+      borderRadius: "15px",
+      marginBottom: "5px",
+      padding: "8px"
+    },
+    iconText: {
+      marginRight: "5px"
     }
   })
 );
@@ -50,11 +58,11 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
     <div className={classes.root}>
       <Card className={classes.rating}>
         <CardContent>
-          <IconButton onClick={() => setDetailRating(null)}>
-            <Typography variant="body2" component="p">
+          <IconButton className={classes.iconButton} onClick={() => setDetailRating(null)}>
+            <KeyboardArrowLeft />
+            <Typography className={classes.iconText} variant="body2" component="p">
               Go back
             </Typography>
-            <KeyboardArrowLeft />
           </IconButton>
           <div>
             <Grid container>

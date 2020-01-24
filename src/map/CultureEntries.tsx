@@ -8,7 +8,12 @@ import { Marker, Popup, LayerGroup, useLeaflet } from "react-leaflet";
 import { LatLngExpression } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleSearchLoading, getAllEntries, toggleEntrySearchLoading } from "./SearchReducer";
+import {
+  toggleSearchLoading,
+  getAllEntries,
+  toggleEntrySearchLoading,
+  toggleResetSearch
+} from "./SearchReducer";
 import { CultureEntry } from "./../types/CultureEntry";
 import {
   getEntryDetails,
@@ -29,24 +34,20 @@ const CultureEntries = forwardRef((props: CultureEntriesProps, ref) => {
   const dispatch = useDispatch();
   const { map } = useLeaflet();
   const { xCoord, yCoord } = props;
-
+  const [initialLoad, setInitialLoad] = useState<boolean>(false);
   const [filteredMarkers, setFilteredMarkers] = useState<Array<CultureEntry>>(
     []
   );
-  const [initialLoad, setInitialLoad] = useState<boolean>(false);
 
   const showDetails: boolean = useSelector(
     (state: any) => state.entryDetailsStore.showEntryDetails
   );
-
   const detail: CultureEntry = useSelector(
     (state: any) => state.entryDetailsStore.detailEntry
   );
-
   const finishedEntrySearchLoading: boolean = useSelector(
     (state: any) => state.searchStore.finishedEntrySearchLoading
   );
-
   const searchResults: Array<CultureEntry> = useSelector(
     (state: any) => state.searchStore.searchEntryResults
   );
@@ -58,6 +59,9 @@ const CultureEntries = forwardRef((props: CultureEntriesProps, ref) => {
   );
   const finishedEntryLoading: number = useSelector(
     (state: any) => state.searchStore.finishedEntryLoading
+  );
+  const resetSearch: boolean = useSelector(
+    (state: any) => state.searchStore.resetSearch
   );
 
   useEffect(() => {
@@ -83,6 +87,9 @@ const CultureEntries = forwardRef((props: CultureEntriesProps, ref) => {
     ) {
       updateMarkers();
       dispatch(toggleEntrySearchLoading(false));
+    } else if (resetSearch) {
+      updateMarkers();
+      dispatch(toggleResetSearch(false));
     }
   });
 
@@ -117,18 +124,13 @@ const CultureEntries = forwardRef((props: CultureEntriesProps, ref) => {
               entry.coords.x
             ];
             return (
-              <Marker
-                key={`entry-${index}`}
-                position={coordinates}
-                onClick={() =>
-                  showDetails
-                    ? dispatch(
-                        getEntryDetails(!(entry.id === detail.id), entry.id)
-                      )
-                    : openEntryDetailView(entry.id)
-                }
-              >
-                <Popup>{entry.name}</Popup>
+              <Marker key={`entry-${index}`} position={coordinates}>
+                <Popup
+                  onOpen={() => openEntryDetailView(entry.id)}
+                  onClose={() => dispatch(toggleEntryDetailView(false))}
+                >
+                  {entry.name}
+                </Popup>
               </Marker>
             );
           })

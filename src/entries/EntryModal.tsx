@@ -55,10 +55,8 @@ export default function EntryModal(props: ResultProps) {
   const classes = useStyles({});
   const { culturyEntry, xCoord, yCoord } = props;
   const dispatch = useDispatch();
-  const history = useHistory();
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const token: string = useSelector((state: any) => state.registerStore.token);
   const userId: number = useSelector((state: any) => state.registerStore.id);
   const [fileBinary, setFileBinary] = useState();
   const toggleModal: boolean = useSelector(
@@ -69,15 +67,6 @@ export default function EntryModal(props: ResultProps) {
     if (toggleModal) {
     }
   }, [toggleModal]);
-
-  // const checkLoginOpenModal = () => {
-  //   // if ( token && token !== '' ) {
-  //   //   dispatch(toggleEntryModal(true));
-  //   // } else {
-  //   //   history.push('/login');
-  //   // }
-  //   dispatch(toggleEntryModal(true));
-  // }
 
   const onSaveEntry = () => {
     dispatch(

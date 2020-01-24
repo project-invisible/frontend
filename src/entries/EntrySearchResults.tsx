@@ -28,7 +28,6 @@ export default function EntrySearchResults(props: ResultProps) {
   const classes = useStyles({});
   const { result } = props;
   const dispatch = useDispatch();
-
   
   const { map } = useLeaflet();
   const handleShowDetails = () => {
