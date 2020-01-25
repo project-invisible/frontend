@@ -10,7 +10,7 @@ import {
   LayerGroup,
   useLeaflet
 } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
+import { LatLngExpression, Icon } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,6 +19,7 @@ import {
 } from "./SearchReducer";
 import { CultureEntry } from "./../types/CultureEntry";
 import { getEntryDetails, toggleEntryDetailView } from "./../entries/EntryDetailsReducer";
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 const useStyles = makeStyles({});
 
@@ -94,14 +95,26 @@ const CultureEntries = forwardRef((props, ref) => {
     }
   }));
 
+  const markerIcon = new Icon({
+    iconUrl: require("../images/community_icon.svg"),
+    shadowUrl: require("../images/marker-shadow.svg"),
+    iconSize: [38, 95],
+    shadowSize: [18, 47], // size of the shadow
+    shadowAnchor: [18, 47], // the same for the shadow
+    popupAnchor:  [0, -15]
+  });
+
+
   return (
     <>
       <LayerGroup>
+      <MarkerClusterGroup showCoverageOnHover={false}>
         {filteredMarkers && map.getZoom() > 5 ? (
           filteredMarkers.map((entry, index) => {
             const coordinates: LatLngExpression = [entry.coords.y, entry.coords.x];
             return (
               <Marker
+              icon={markerIcon}
                 key={`entry-${index}`}
                 position={coordinates}
                 onClick={() =>
@@ -117,6 +130,7 @@ const CultureEntries = forwardRef((props, ref) => {
         ) : (
           <div />
         )}
+        </MarkerClusterGroup>
       </LayerGroup>
     </>
   );

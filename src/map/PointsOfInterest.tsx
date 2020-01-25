@@ -1,19 +1,13 @@
 import React, {
-  Component,
   useEffect,
   forwardRef,
   useImperativeHandle,
   useState
 } from "react";
 import {
-  Map,
   Marker,
   Popup,
-  TileLayer,
-  Pane,
-  ZoomControl,
   LayerGroup,
-  Circle,
   useLeaflet
 } from "react-leaflet";
 import { LatLngExpression, Icon } from "leaflet";
@@ -26,6 +20,7 @@ import {
 } from "./SearchReducer";
 import detailsStore, { getDetails } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 const useStyles = makeStyles({});
 
@@ -105,7 +100,8 @@ const PointsOfInterest = forwardRef((props, ref) => {
     shadowUrl: require("../images/marker-shadow.svg"),
     iconSize: [38, 95],
     shadowSize: [18, 47], // size of the shadow
-    shadowAnchor: [18, 47] // the same for the shadow
+    shadowAnchor: [18, 47], // the same for the shadow
+    popupAnchor:  [0, -15]
   });
 
   const updateMarkers = () => {
@@ -130,6 +126,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
   return (
     <>
       <LayerGroup>
+      <MarkerClusterGroup showCoverageOnHover={false}>
         {filteredMarkers && map.getZoom() > 5 ? (
           filteredMarkers.map((poi, index) => {
             const coordinates: LatLngExpression = [
@@ -154,6 +151,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
         ) : (
           <div />
         )}
+        </MarkerClusterGroup>
       </LayerGroup>
     </>
   );

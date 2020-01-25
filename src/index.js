@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import store from './store.js';
 import { Provider } from 'react-redux';
 import './index.css';
+require('react-leaflet-markercluster/dist/styles.min.css');
 
 ReactDOM.render(<Provider store={store}>
     <App />

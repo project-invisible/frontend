@@ -50,6 +50,7 @@ export default function HomeMap() {
         zoom={mapAttributes.zoom}
         className={classes.root}
         zoomControl={false}
+        maxZoom={18}
         onMoveEnd={() => {
           childRef.current ? childRef.current.callUpdate() : null;
           entriesRef.current ? entriesRef.current.callUpdate() : null
