@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     result: {
       overflowY: "auto",
       width: 400,
-      height: "calc( 100vh - 20vh)"
+      maxHeight: "calc( 100vh - 20vh)"
     }
   })
 );
@@ -52,12 +52,25 @@ export default function SearchBar() {
   const [paginationEnd, setPaginationEnd] = useState<number>(4);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const dispatch = useDispatch();
 
   const poiChecked: boolean = useSelector(
     (state: any) => state.switchLayerStore.poiChecked
   );
   const entryChecked: boolean = useSelector(
     (state: any) => state.switchLayerStore.entryChecked
+  );
+  const showDetails: boolean = useSelector(
+    (state: any) => state.detailsStore.showDetails
+  );
+  const showEntryDetails: boolean = useSelector(
+    (state: any) => state.entryDetailsStore.showEntryDetails
+  );
+  const searchResults: Array<PointOfInterest> = useSelector(
+    (state: any) => state.searchStore.searchResults
+  );
+  const searchEntryResults: Array<CultureEntry> = useSelector(
+    (state: any) => state.searchStore.searchEntryResults
   );
 
   const nextPage = () => {
@@ -89,23 +102,6 @@ export default function SearchBar() {
     setPage(0);
     resetPage(parseInt(event.target.value, 10));
   };
-
-  const dispatch = useDispatch();
-
-  const showDetails: boolean = useSelector(
-    (state: any) => state.detailsStore.showDetails
-  );
-  const showEntryDetails: boolean = useSelector(
-    (state: any) => state.entryDetailsStore.showEntryDetails
-  );
-
-  const searchResults: Array<PointOfInterest> = useSelector(
-    (state: any) => state.searchStore.searchResults
-  );
-
-  const searchEntryResults: Array<CultureEntry> = useSelector(
-    (state: any) => state.searchStore.searchEntryResults
-  );
 
   const refContainer = element => {
     if (element) {
@@ -158,7 +154,7 @@ export default function SearchBar() {
   };
 
   const displayEntryResults = (searchResults: CultureEntry[]) => {
-    return searchResults && searchResults.length > 0 && !showDetails ? (
+    return searchResults && searchResults.length > 0 && !showEntryDetails ? (
       <div className={classes.result}>
         {searchResults
           .slice(paginationStart, paginationEnd + 1)
@@ -213,7 +209,7 @@ export default function SearchBar() {
         >
           <SearchIcon />
         </IconButton>
-        {searchResults.length > 0 && (
+        {(searchResults.length > 0 || searchEntryResults.length > 0) && (
           <IconButton
             onClick={() => resetSearchOnClick()}
             className={classes.iconButton}

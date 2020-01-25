@@ -24,8 +24,9 @@ import {
   toggleSearchLoading,
   toggleResetSearch
 } from "./SearchReducer";
-import detailsStore, { getDetails } from "./DetailsReducer";
+import { getDetails, closeDetailView } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
+import { toggleEntryDetailView } from "../entries/EntryDetailsReducer";
 
 const useStyles = makeStyles({});
 
@@ -33,44 +34,36 @@ const PointsOfInterest = forwardRef((props, ref) => {
   const classes = useStyles({});
   const dispatch = useDispatch();
   const { map } = useLeaflet();
-
+  const [initialLoad, setInitialLoad] = useState<boolean>(false);
   const [filteredMarkers, setFilteredMarkers] = useState<
     Array<PointOfInterest>
   >([]);
-  const [initialLoad, setInitialLoad] = useState<boolean>(false);
 
   const showDetails: boolean = useSelector(
     (state: any) => state.detailsStore.showDetails
   );
-
   const detail: PointOfInterest = useSelector(
     (state: any) => state.detailsStore.detailPOI
   );
-
   const finishedSearchLoading: boolean = useSelector(
     (state: any) => state.searchStore.finishedSearchLoading
   );
-
   const searchResults: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.searchResults
   );
-
   const poiChecked: boolean = useSelector(
     (state: any) => state.switchLayerStore.poiChecked
   );
- 
   const allPOIs: Array<PointOfInterest> = useSelector(
     (state: any) => state.searchStore.allPois
   );
-
   const finishedFirstLoading: number = useSelector(
     (state: any) => state.searchStore.finishedFirstLoading
   );
-
   const resetSearch: boolean = useSelector(
     (state: any) => state.searchStore.resetSearch
   );
-  
+
   useEffect(() => {
     dispatch(getAllPOIs());
     updateMarkers();
@@ -118,6 +111,11 @@ const PointsOfInterest = forwardRef((props, ref) => {
     setFilteredMarkers(tempMarkers);
   };
 
+  const openEntryDetailView = (entryId: number) => {
+    dispatch(getDetails(true, entryId));
+    dispatch(toggleEntryDetailView(false));
+  };
+
   useImperativeHandle(ref, () => ({
     callUpdate() {
       updateMarkers();
@@ -134,17 +132,13 @@ const PointsOfInterest = forwardRef((props, ref) => {
               poi.coordinates.x
             ];
             return (
-              <Marker
-                key={index}
-                position={coordinates}
-                icon={markerIcon}
-                onClick={() =>
-                  showDetails
-                    ? dispatch(getDetails(!(poi.id === detail.id), poi.id))
-                    : dispatch(getDetails(true, poi.id))
-                }
-              >
-                <Popup>{poi.name}</Popup>
+              <Marker key={index} position={coordinates} icon={markerIcon}>
+                <Popup
+                  onOpen={() => openEntryDetailView(poi.id)}
+                  onClose={() => dispatch(closeDetailView(false))}
+                >
+                  {poi.name}
+                </Popup>
               </Marker>
             );
           })
