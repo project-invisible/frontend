@@ -42,12 +42,19 @@ function Register() {
   const classes = useStyles({});
   const dispatch = useDispatch();
   const history = useHistory();
+  const [errorMessage, setErrorMessage] = useState<String>("");
 
   const token: string = useSelector((state: any) => state.registerStore.token);
   const error: string = useSelector((state: any) => state.registerStore.error);
 
   const submitRegister = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (email === "") {
+      setErrorMessage("Email is required!");
+    }
+    if (password === "") {
+      setErrorMessage("Password is required!");
+    }
     dispatch(postRegistration(email, username, password));
   };
 
@@ -97,7 +104,10 @@ function Register() {
               className={classes.textField}
               margin="normal"
               value={email}
-              onChange={event => setEmail(event.target.value)}
+              onChange={event => {
+                setErrorMessage("");
+                setEmail(event.target.value);
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -107,9 +117,13 @@ function Register() {
               type="password"
               autoComplete="current-password"
               className={classes.textField}
+              required
               margin="normal"
               value={password}
-              onChange={event => setPassword(event.target.value)}
+              onChange={event => {
+                setErrorMessage("");
+                setPassword(event.target.value);
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -125,6 +139,11 @@ function Register() {
           <Grid item xs={12}>
             <Typography variant="body2" color="error">
               {error}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body2" color="error">
+              {errorMessage}
             </Typography>
           </Grid>
         </Grid>

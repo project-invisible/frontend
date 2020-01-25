@@ -65,7 +65,7 @@ export const postRegistration = (
   });
   try {
     const response = await fetch(
-      "http://localhost:8182/authenticate/register",
+      `${process.env.REACT_APP_BACKEND_URL}/authenticate/register`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -98,7 +98,7 @@ export const loginUser = (email: String, password: String) => async (
       email,
       password
     });
-    const response = await fetch(`http://localhost:8182/authenticate`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/authenticate`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body
