@@ -20,6 +20,7 @@ import { postRatingReport } from "./../admin/AdminReducer";
 import { RatingReport } from "../types/Reports";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "./../types/User";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +47,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     iconText: {
       marginRight: "5px"
+    },
+    account: {
+      "&:hover": {
+        cursor: "pointer"
+      }
     }
   })
 );
@@ -60,6 +66,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
   const { rating, setDetailRating } = props;
   const dispatch = useDispatch();
   const user: User = useSelector((state: any) => state.registerStore.user);
+  const history = useHistory();
 
   const reportRating = () => {
     if (user) {
@@ -78,14 +85,32 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
     <div className={classes.root}>
       <Card className={classes.rating}>
         <CardContent>
-          <IconButton className={classes.iconButton} onClick={() => setDetailRating(null)}>
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => setDetailRating(null)}
+          >
             <KeyboardArrowLeft />
-            <Typography className={classes.iconText} variant="body2" component="p">
+            <Typography
+              className={classes.iconText}
+              variant="body2"
+              component="p"
+            >
               Go back
             </Typography>
           </IconButton>
           <div>
-            <Grid container>
+            <Grid
+              container
+              className={classes.account}
+              onClick={() => {
+                history.push({
+                  pathname: "/user",
+                  state: {
+                    userId: rating.user.id
+                  }
+                });
+              }}
+            >
               <Grid item xs={1}>
                 <Face />
               </Grid>

@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     iconText: {
       marginRight: "5px"
+    },
+    account: {
+      "&:hover": {
+        cursor: "pointer"
+      }
     }
   })
 );
@@ -75,7 +80,7 @@ export default function EntriesDetailView() {
         {detail.description && (
           <Typography color="textSecondary">{detail.description}</Typography>
         )}
-        <Grid container onClick={() => {
+        <Grid container className={classes.account} onClick={() => {
               history.push({
                 pathname: "/user",
                 state: {
