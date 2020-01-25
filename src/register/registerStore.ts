@@ -4,6 +4,7 @@ export const REGISTER = "REGISTER";
 export const REGISTER_ERROR = "REGISTER_ERROR";
 export const LOGIN = "LOGIN";
 export const LOGIN_ERROR = "LOGIN_ERROR";
+export const GET_USER = "GET_USER";
 
 const initialState = {
   authenticated: false,
@@ -11,7 +12,8 @@ const initialState = {
   userGroup: Role,
   token: "",
   error: "",
-  id: null
+  id: null,
+  user: null,
 };
 
 /**
@@ -40,6 +42,9 @@ const registerStore = (state = initialState, action) => {
       return state;
     case LOGIN_ERROR:
       state.error = "Error: Wrong username or password!";
+      return state;
+    case GET_USER:
+      state.user = action.result;
       return state;
   }
   return state;
@@ -109,6 +114,20 @@ export const loginUser = (email: String, password: String) => async (
         type: LOGIN_ERROR
       });
     }
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
+
+export const getUser = (userId: number) => async (dispatch, getState) => {
+  try {
+    const response = await fetch(`http://localhost:8182/user/${userId}`);
+    const result = await response.json();
+    dispatch({
+      type: LOGIN,
+      result
+    });
   } catch (error) {
     console.log("throwing Error", error);
     throw error;

@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import { loginUser } from './../register/registerStore';
+import { loginUser, getUser } from './../register/registerStore';
 
 const useStyles = makeStyles({
   root: {
@@ -42,6 +42,7 @@ function Register() {
   let history = useHistory();
 
   const token: string = useSelector((state: any) => state.registerStore.token);
+  const id: number = useSelector((state: any) => state.registerStore.id);
   const error: string = useSelector((state: any) => state.registerStore.error);
 
   const submitLogin = (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,6 +53,7 @@ function Register() {
   useEffect(() => {
     if (token !== "" && token !== null) {
       history.push("");
+      dispatch(getUser(id));
     }
   });
 

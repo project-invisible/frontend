@@ -8,7 +8,6 @@ import {
   Grid
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import RatingModal from "../rating/RatingModal";
 import { CultureEntry } from "./../types/CultureEntry";
 import Face from "@material-ui/icons/Face";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,6 +16,7 @@ import { createStyles } from "@material-ui/core/styles";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import IconButton from "@material-ui/core/IconButton";
 import { toggleEntryDetailView } from "./EntryDetailsReducer";
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     iconText: {
       marginRight: "5px"
+    },
+    account: {
+      "&:hover": {
+        cursor: "pointer"
+      }
     }
   })
 );
@@ -42,6 +47,7 @@ export default function EntriesDetailView() {
   const detail: CultureEntry = useSelector(
     (state: any) => state.entryDetailsStore.detailEntry
   );
+  const history = useHistory();
 
   return (
     <Card>
@@ -74,7 +80,14 @@ export default function EntriesDetailView() {
         {detail.description && (
           <Typography color="textSecondary">{detail.description}</Typography>
         )}
-        <Grid container>
+        <Grid container className={classes.account} onClick={() => {
+              history.push({
+                pathname: "/user",
+                state: {
+                  userId: detail.user.id
+                }
+              });
+            }}>
           <Grid item xs={1}>
             <Face />
           </Grid>
