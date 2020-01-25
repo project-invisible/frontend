@@ -11,7 +11,7 @@ const initialState = {
   userGroup: Role,
   token: "",
   error: "",
-  id: null,
+  id: null
 };
 
 /**
@@ -27,20 +27,20 @@ const registerStore = (state = initialState, action) => {
       state.error = "";
       state.id = action.result.id;
       return state;
-      case LOGIN:
-        state.authenticated = true;
-        state.email = action.result.email;
-        state.userGroup = action.result.group;
-        state.token = action.result.token;
-        state.error = "";
-        state.id = action.result.id;
-        return state;
+    case LOGIN:
+      state.authenticated = true;
+      state.email = action.result.email;
+      state.userGroup = action.result.group;
+      state.token = action.result.token;
+      state.error = "";
+      state.id = action.result.id;
+      return state;
     case REGISTER_ERROR:
       state.error = "Error: User already registered!";
       return state;
-      case LOGIN_ERROR:
-        state.error = "Error: Wrong username or password!";
-        return state;
+    case LOGIN_ERROR:
+      state.error = "Error: Wrong username or password!";
+      return state;
   }
   return state;
 };
@@ -60,7 +60,7 @@ export const postRegistration = (
   });
   try {
     const response = await fetch(
-      "http://localhost:8182/authenticate/register",
+      `${process.env.REACT_APP_BACKEND_URL}/authenticate/register`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -84,16 +84,16 @@ export const postRegistration = (
   }
 };
 
-export const loginUser = (
-  email: String,
-  password: String
-) => async (dispatch, getState) => {
+export const loginUser = (email: String, password: String) => async (
+  dispatch,
+  getState
+) => {
   try {
     const body = JSON.stringify({
       email,
       password
     });
-    const response = await fetch(`http://localhost:8182/authenticate`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/authenticate`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body
@@ -102,7 +102,7 @@ export const loginUser = (
     if (result.exists === true) {
       dispatch({
         type: LOGIN,
-      result
+        result
       });
     } else {
       dispatch({
