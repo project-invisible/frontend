@@ -34,6 +34,7 @@ function Navigationbar() {
   const classes = useStyles({});
   const role: Role = useSelector((state: any) => state.registerStore.userGroup);
   const email: string = useSelector((state: any) => state.registerStore.email);
+  const id: number = useSelector((state: any) => state.registerStore.id);
 
   return (
     <AppBar position="static" className={classes.header}>
@@ -60,14 +61,24 @@ function Navigationbar() {
             Admin
           </Button>
         )}
-        <IconButton
-          className={classes.profileButton}
-          color="inherit"
-          aria-label="account of current user"
-          aria-controls="menu-appbar"
-        >
-          <AccountCircle />
-        </IconButton>
+        {id && (
+          <IconButton
+            className={classes.profileButton}
+            color="inherit"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            onClick={() => {
+              history.push({
+                pathname: "/user",
+                state: {
+                  userId: id
+                }
+              });
+            }}
+          >
+            <AccountCircle />
+          </IconButton>
+        )}
         {email && email !== "" ? (
           <Typography variant="body2">{email}</Typography>
         ) : (

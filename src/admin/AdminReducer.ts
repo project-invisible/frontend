@@ -1,6 +1,8 @@
 import { RatingReport } from "../types/Reports";
+import { UserReport } from './../types/Reports';
 
 export const GET_REPORTED_USERS = "GET_REPORTED_USERS";
+export const POST_USER_REPORT = "POST_USER_REPORT";
 export const GET_REPORTED_RATINGS = "GET_REPORTED_RATINGS";
 export const POST_RATING_REPORT = "POST_RATING_REPORT";
 export const GET_FEEDBACK = "GET_FEEDBACK";
@@ -34,6 +36,10 @@ const adminStore = (state = initialState, action) => {
       return {
         ...state
       }
+    case POST_USER_REPORT: 
+      return {
+        ...state
+      }
   }
   return state;
 };
@@ -48,6 +54,27 @@ export const getReportedUsers = () => async dispatch => {
     dispatch({
       type: GET_REPORTED_USERS,
       body
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
+
+export const postUserReport = (userReport: UserReport) => async dispatch => {
+  try {
+    const body = JSON.stringify(userReport);
+    const response = await fetch(
+      `http://localhost:8182/userReport`,
+      {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body
+      }
+    );
+    const result = await response.json();
+    dispatch({
+      type: POST_USER_REPORT
     });
   } catch (error) {
     console.log("throwing Error", error);
@@ -73,7 +100,7 @@ export const postRatingReport = (ratingReport: RatingReport) => async dispatch =
   try {
     const body = JSON.stringify(ratingReport);
     const response = await fetch(
-      `http://localhost:8182/poi/rating`,
+      `http://localhost:8182/ratingReport`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" },
