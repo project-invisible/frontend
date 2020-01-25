@@ -4,8 +4,8 @@ import { Card, CardContent, Typography, CardActions } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ThumbUp from "@material-ui/icons/ThumbUp";
 import { PointOfInterest } from "./../types/PointOfInterest";
-import { getDetails } from './DetailsReducer';
-import { useDispatch } from 'react-redux';
+import { getDetails } from "./DetailsReducer";
+import { useDispatch } from "react-redux";
 import { useLeaflet } from "react-leaflet";
 import { marker } from "leaflet";
 
@@ -33,7 +33,6 @@ export default function Result(props: ResultProps) {
 
   const { map } = useLeaflet();
 
-
   const handleShowDetails = () => {
     dispatch(getDetails(true, result.id));
     map.flyTo([result.coordinates.y, result.coordinates.x], 12);
@@ -50,24 +49,28 @@ export default function Result(props: ResultProps) {
           {result.postal}
         </Typography>
         <div className={classes.ratingContainer}>
-          {result.overallRatingPerQuestion ? result.overallRatingPerQuestion.map((question, index) => {
-            return (
-              <div>
+          {result.overallRatingPerQuestion ? (
+            result.overallRatingPerQuestion.map((question, index) => {
+              return (
                 <div>
-                  <div>{question.question.text}</div>
-                  <ThumbUp />
-                  <p>{`${question.rating * 100}% agree with this question.`}</p>
+                  <div>
+                    <div>{question.question.text}</div>
+                    <ThumbUp />
+                    <p>{`${question.rating *
+                      100}% agree with this question.`}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          }) : <div/>
-        }
-          {/* <Rating name="disabled" value={result.overallRating} disabled />
-            <Typography className={classes.rating}>{result.overallRating}</Typography>     */}
+              );
+            })
+          ) : (
+            <div />
+          )}
         </div>
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={() => handleShowDetails()}>Learn More</Button>
+        <Button size="small" onClick={() => handleShowDetails()}>
+          Learn More
+        </Button>
       </CardActions>
     </Card>
   );
