@@ -42,7 +42,7 @@ export const getEntryDetails = (
   id: number
 ) => async dispatch => {
   try {
-    const response = await fetch(`http://localhost:8182/entry/${id}`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/entry/${id}`);
     const body = await response.json();
     const entry = body;
     dispatch({
@@ -116,7 +116,7 @@ export const addCultureEntry = (
   data.append("cultureEntry", blob);
   data.append("cultureImage", new Blob([image]));
   try {
-    const response = await fetch(`http://localhost:8182/entry`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/entry`, {
       method: "post",
       body: data
     });

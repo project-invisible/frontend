@@ -86,7 +86,7 @@ const searchStore = (state = initialState, action) => {
 export const searchPOI = (query: string) => async (dispatch, getState) => {
   try {
     const response = await fetch(
-      `http://localhost:8182/poi/search?query=${query}`,
+      `${process.env.REACT_APP_BACKEND_URL}/poi/search?query=${query}`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" }
@@ -106,7 +106,7 @@ export const searchPOI = (query: string) => async (dispatch, getState) => {
 export const searchEntries = (query: string) => async (dispatch, getState) => {
   try {
     const response = await fetch(
-      `http://localhost:8182/entry/search?query=${query}`,
+      `${process.env.REACT_APP_BACKEND_URL}/entry/search?query=${query}`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" }
@@ -181,7 +181,7 @@ export const resetSearch = () => async (dispatch, getState) => {
 
 export const getAllPOIs = () => async (dispatch, getState) => {
   try {
-    const response = await fetch(`http://localhost:8182/poi`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/poi`);
     const body = await response.json();
     const pois = body;
     dispatch({
@@ -196,7 +196,7 @@ export const getAllPOIs = () => async (dispatch, getState) => {
 
 export const getAllEntries = () => async (dispatch, getState) => {
   try {
-    const response = await fetch(`http://localhost:8182/entry`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/entry`);
     const body = await response.json();
     const entries = body;
     dispatch({
