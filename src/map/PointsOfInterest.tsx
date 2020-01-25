@@ -1,21 +1,10 @@
 import React, {
-  Component,
   useEffect,
   forwardRef,
   useImperativeHandle,
   useState
 } from "react";
-import {
-  Map,
-  Marker,
-  Popup,
-  TileLayer,
-  Pane,
-  ZoomControl,
-  LayerGroup,
-  Circle,
-  useLeaflet
-} from "react-leaflet";
+import { Marker, Popup, LayerGroup, useLeaflet } from "react-leaflet";
 import { LatLngExpression, Icon } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -26,6 +15,7 @@ import {
 } from "./SearchReducer";
 import { getDetails, closeDetailView } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
+import MarkerClusterGroup from "react-leaflet-markercluster";
 import { toggleEntryDetailView } from "../entries/EntryDetailsReducer";
 
 const useStyles = makeStyles({});
@@ -94,8 +84,12 @@ const PointsOfInterest = forwardRef((props, ref) => {
   });
 
   const markerIcon = new Icon({
-    iconUrl: require("../images/mapMarker.svg"),
-    iconSize: [25, 41]
+    iconUrl: require("../images/uni_icon.svg"),
+    shadowUrl: require("../images/marker-shadow.svg"),
+    iconSize: [38, 95],
+    shadowSize: [18, 47], // size of the shadow
+    shadowAnchor: [18, 47], // the same for the shadow
+    popupAnchor: [0, -15]
   });
 
   const updateMarkers = () => {
@@ -125,26 +119,32 @@ const PointsOfInterest = forwardRef((props, ref) => {
   return (
     <>
       <LayerGroup>
-        {filteredMarkers && map.getZoom() > 5 ? (
-          filteredMarkers.map((poi, index) => {
-            const coordinates: LatLngExpression = [
-              poi.coordinates.y,
-              poi.coordinates.x
-            ];
-            return (
-              <Marker key={index} position={coordinates} icon={markerIcon}>
-                <Popup
-                  onOpen={() => openEntryDetailView(poi.id)}
-                  onClose={() => dispatch(closeDetailView(false))}
+        <MarkerClusterGroup showCoverageOnHover={false}>
+          {filteredMarkers && map.getZoom() > 5 ? (
+            filteredMarkers.map((poi, index) => {
+              const coordinates: LatLngExpression = [
+                poi.coordinates.y,
+                poi.coordinates.x
+              ];
+              return (
+                <Marker
+                  key={index}
+                  position={coordinates}
+                  icon={markerIcon}
+                  onClick={() => 
+                    showDetails && poi.id === detail.id
+                      ? dispatch(toggleEntryDetailView(false))
+                      : openEntryDetailView(poi.id)
+                  }
                 >
-                  {poi.name}
-                </Popup>
-              </Marker>
-            );
-          })
-        ) : (
-          <div />
-        )}
+                  <Popup>{poi.name}</Popup>
+                </Marker>
+              );
+            })
+          ) : (
+            <div />
+          )}
+        </MarkerClusterGroup>
       </LayerGroup>
     </>
   );

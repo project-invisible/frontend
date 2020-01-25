@@ -77,6 +77,7 @@ export default function HomeMap() {
         className={classes.root}
         zoomControl={false}
         onClick={event => openCultureCard(event)}
+        maxZoom={18}
         onMoveEnd={() => {
           childRef.current ? childRef.current.callUpdate() : null;
           entriesRef.current ? entriesRef.current.callUpdate() : null;
