@@ -9,12 +9,14 @@ import {
   Chip,
   Grid
 } from "@material-ui/core";
-import { Rating, RatingOptions, CategoryRating } from "../types/Rating";
+import { Rating, RatingOptions, CategoryRating, Category, SubCategory } from "../types/Rating";
 import Radio from "@material-ui/core/Radio";
 import AddCircle from "@material-ui/icons/AddCircle";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
+import { Question } from './../types/Rating';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,6 +39,7 @@ type ResultProps = {
   setPageText: (text: string) => void;
   addTag: (string) => void;
   removeTag: (string) => void;
+  handleFollowUp: (RatingOptions) => void;
 };
 
 interface ChipData {
@@ -46,13 +49,25 @@ interface ChipData {
 
 export default function RatingView(props: ResultProps) {
   const classes = useStyles({});
-  const { currentPage, setPageRating, setPageText, addTag, removeTag } = props;
+  const { currentPage, setPageRating, setPageText, addTag, removeTag, handleFollowUp } = props;
   const [tag, setTag] = useState<string>("");
+  const categories: Category[] = useSelector(
+    (state: any) => state.ratingStore.categories
+  );
+  const subCategories: SubCategory[] = useSelector(
+    (state: any) => state.ratingStore.subCategories
+  );
+  const questions: Question[] = useSelector(
+    (state: any) => state.ratingStore.questions
+  );
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value: RatingOptions =
       RatingOptions[(event.target as HTMLInputElement).value];
     setPageRating(value);
+    if (value !== RatingOptions.YES) {
+      handleFollowUp(value);
+    }
   };
 
   const onAddTag = () => {
@@ -64,22 +79,28 @@ export default function RatingView(props: ResultProps) {
         removeTag(tag);
   }
 
+  const question = questions.find( question => question.id === currentPage.questionId);
+  const category = categories.find( category => category.id === question.categoryId);
+  const subCategory = subCategories.find( subCategory => subCategory.id === question.subCategoryId); 
+  console.log(categories);
+  console.log(question);
+
   return (
     <Card className={classes.ratingContent}>
       <CardContent>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h4" component="h2">
-              {`${currentPage.question.category.name} - ${currentPage.question.subCategory.name}`}
+              {`${category && category.name} ${subCategory && subCategory.name !== null ? `- ${subCategory.name}` : ``}`}
             </Typography>
           </Grid>
           <Grid container item xs={12}>
             <Grid item xs={12}>
               <Typography variant="body2" component="div">
-                {currentPage.question.text}
+                {question.text}
               </Typography>
             </Grid>
-            {currentPage.question.hasCheckbox && (
+            {question.hasCheckbox && (
               <RadioGroup
                 aria-label="gender"
                 name="gender1"

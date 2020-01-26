@@ -13,11 +13,12 @@ import { Card, CardContent, Typography } from "@material-ui/core";
 import FinishView from "./FinishView";
 import IntroductionView from "./IntroductionView";
 import { useDispatch, useSelector } from "react-redux";
-import { openModal, addRating } from "./RatingReducer";
+import { openModal, addRating, getQuestions } from "./RatingReducer";
 import { Status, Role } from "../types/User";
-import { PointOfInterest } from './../types/PointOfInterest';
-import Result from './../map/SearchResult';
-import { useHistory } from 'react-router-dom';
+import { PointOfInterest } from "./../types/PointOfInterest";
+import Result from "./../map/SearchResult";
+import { useHistory } from "react-router-dom";
+import { Question } from "./../types/Rating";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,175 +34,73 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "flex-end"
     },
     root: {
-      '& .MuiTextField-root': {
+      "& .MuiTextField-root": {
         margin: theme.spacing(1),
-        width: 200,
-      },
-    },
+        width: 200
+      }
+    }
   })
 );
 
-const ratingDummy: Rating = {
-  id: 1,
-  generalComment: "Test",
-  user: {
-    id: 8,
-    email: "Test",
-    username: "Test",
-    anonymous: true,
-    role: Role.USER,
-    creationDate: new Date("December 17, 1995 03:24:00"),
-    password: "test",
-    status: Status.ACTIVE,
-    contact: {
-      email: "test",
-      urls: ["test", "test"],
-      phone: 1239234
-    }
-  },
-  poi: {
-    id: 2,
-    city: "Test",
-    coordinates: {
-      x: 2342,
-      y: 234
-    },
-    street: "213fdsf",
-    description: "sdff",
-    email: "",
-    name: "",
-    postal: 123,
-    website: "",
-    overallRatingPerQuestion: [
-      {
-        question: {
-          id: 1,
-          category: {
-            id: 2,
-            name: "Category 1"
-          },
-          subCategory: {
-            id: 3,
-            name: "Subcategory 2",
-            category: {
-              id: 2,
-              name: "Category 1"
-            },
-          },
-          followUpQuestions: [],
-          hasCheckbox: true,
-          text: "Does the university have an equality officer?"
-        },
-        rating: 0.89
-      },
-      {
-        question: {
-          id: 2,
-          category: {
-            id: 2,
-            name: "Category 1"
-          },
-          subCategory: {
-            id: 3,
-            name: "Subcategory 2",
-            category: {
-              id: 2,
-              name: "Category 1"
-            },
-          },
-          followUpQuestions: [],
-          hasCheckbox: true,
-          text: "Do you feel treated well?"
-        },
-        rating: 0.43
-      }
-    ]
-  },
-  categorieRatings: [
-    {
-      id: 1,
-      comment: "",
-      tag: ["fb4"],
-      rating: RatingOptions.YES,
-      question: {
-        id: 1245,
-        text: "This is the first question. There is some text explaining the question. What do you think?",
-        category: {
-          id: 1,
-          name: "Category 1"
-        },
-        hasCheckbox: true,
-        followUpQuestions: [],
-        subCategory: {
-          id: 345,
-          name: "Subcategory 1",
-          category: {
-            id: 1,
-            name: "Category 1"
-          }
-        }
-      }
-    },
-    {
-      id: 12444,
-      comment: "",
-      tag: ["fachbereich4", "computer science"],
-      rating: RatingOptions.YES,
-      question: {
-        id: 1245,
-        text: "Question 2",
-        category: {
-          id: 1,
-          name: "Category 1"
-        },
-        hasCheckbox: true,
-        followUpQuestions: [1],
-        subCategory: {
-          id: 345,
-          name: "Subcategory 2",
-          category: {
-            id: 1,
-            name: "Category 1"
-          }
-        }
-      }
-    }
-  ]
-};
-
 type ResultProps = {
-  ratedPoi: PointOfInterest,
-}
+  ratedPoi: PointOfInterest;
+};
 
 export default function RatingModal(props: ResultProps) {
   const classes = useStyles({});
   const { ratedPoi } = props;
-  const [rating, setRating] = React.useState<Rating>(ratingDummy);
+  const [rating, setRating] = React.useState<Rating>(null);
   const dispatch = useDispatch();
   const [pageCount, setPageCount] = React.useState<number>(-1);
-  const [skipNextQuestion, setSkipNextQuestion] = React.useState<boolean>(false);
-  const maxPages = rating.categorieRatings.length + 1;
+  const [followUpQuestions, setFollowUpQuestions] = useState<Array<number>>([]);
+  const [skipNextQuestion, setSkipNextQuestion] = React.useState<boolean>(
+    false
+  );
+  const [maxPages, setMaxPages] = useState<number>(0);
   const history = useHistory();
   const token: string = useSelector((state: any) => state.registerStore.token);
   const userId: number = useSelector((state: any) => state.registerStore.id);
   const toggleModal: boolean = useSelector(
     (state: any) => state.ratingStore.modalOpen
   );
+  const questions: Question[] = useSelector(
+    (state: any) => state.ratingStore.questions
+  );
 
   useEffect(() => {
-    if ( toggleModal ) {
-      let oldRating: Rating = ratingDummy;
-      oldRating.poi = ratedPoi;
-      oldRating.user.id = userId;
-      setRating(oldRating);
+    dispatch(getQuestions());
+  }, []);
+
+  const generateRating = () => {
+    let categorieRatings: CategoryRating[] = [];
+    questions.forEach(question => {
+      const categorieRating: CategoryRating = {
+        comment: "",
+        id: null,
+        rating: RatingOptions.YES,
+        tag: [],
+        questionId: question.id
+      };
+      categorieRatings.push(categorieRating);
+    });
+    const generatedRating: Rating = {
+      categorieRatings,
+      generalComment: "",
+      id: null,
+      userId,
+      poiId: ratedPoi.id
+    };
+    setMaxPages(categorieRatings.length + 1);
+    setRating(generatedRating);
+  };
+
+  useEffect(() => {
+    if (toggleModal) {
+      generateRating();
       setPageCount(-1);
       setSkipNextQuestion(false);
     }
- }, [toggleModal]);
-
- useEffect(() => {
-   checkFollowUpQuestions();
-}, [rating]);
+  }, [toggleModal]);
 
   const setPageRating = (checkedBox: RatingOptions) => {
     // deep copy of state object
@@ -221,57 +120,56 @@ export default function RatingModal(props: ResultProps) {
     oldRating.categorieRatings[pageCount].tag.push(tag);
     setRating(oldRating);
   };
-  
+
   const removeTag = (tag: string) => {
     let oldRating: Rating = JSON.parse(JSON.stringify(rating));
-    const filteredTags = oldRating.categorieRatings[pageCount].tag.filter(e => e !== tag);
+    const filteredTags = oldRating.categorieRatings[pageCount].tag.filter(
+      e => e !== tag
+    );
     oldRating.categorieRatings[pageCount].tag = filteredTags;
     setRating(oldRating);
   };
 
-  const checkFollowUpQuestions = (incrementor = 1) => {
-    if (rating.categorieRatings[pageCount + incrementor] === undefined) {
-      setSkipNextQuestion( false );
+  const checkFollowUpQuestions = (increment: number, direction: number) => {
+    if (
+      followUpQuestions.includes(
+        rating.categorieRatings[pageCount + increment].questionId
+      )
+    ) {
+      checkFollowUpQuestions(increment + direction, direction);
     } else {
-      const followUpQuestions =
-        rating.categorieRatings[pageCount + incrementor].question.followUpQuestions;
-      let relevantQuestions: CategoryRating[] = [];
-      followUpQuestions.forEach(filterId => {
-        const matchingRating = rating.categorieRatings.filter(categoryRating => {
-          return categoryRating.id === filterId;
-        });
-        relevantQuestions = matchingRating;
-      });
-      const skipQuestion = relevantQuestions.some(
-        rating => rating.rating === RatingOptions.FALSE
-      );
-      setSkipNextQuestion( skipQuestion);
+      setPageCount(pageCount + increment);
+    }
+  };
+
+  const handleFollowUpQuestions = (selectedRating: RatingOptions) => {
+    const question = questions.find(question => question.id === rating.categorieRatings[pageCount].questionId);
+    if (!(selectedRating === RatingOptions.YES)) {
+      if (question.followUpQuestion) {
+        question.followUpQuestion.forEach(
+          followUpId => {
+            setFollowUpQuestions(oldArray => [...oldArray, followUpId]);
+          }
+        );
+      }
     }
   };
 
   const handleNext = () => {
-    if (skipNextQuestion) {
-      setPageCount(pageCount => pageCount + 2);
-    } else {
-      setPageCount(pageCount => pageCount + 1);
-    }
+    checkFollowUpQuestions(1, 1);
   };
 
   const handleBack = () => {
-    if (skipNextQuestion) {
-      setPageCount(pageCount => pageCount - 2);
-    } else {
-      setPageCount(pageCount => pageCount - 1);
-    }
+    checkFollowUpQuestions(-1, -1);
   };
 
   const checkLoginOpenModal = () => {
-    if ( token && token !== '' ) {
+    if (token && token !== "") {
       dispatch(openModal(true));
     } else {
-      history.push('/login');
+      history.push("/login");
     }
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -301,7 +199,11 @@ export default function RatingModal(props: ResultProps) {
           <Card className={classes.modalContent}>
             <CardContent>
               {pageCount === -1 ? (
-                <IntroductionView currentUniversity={rating.poi} />
+                rating ? (
+                  <IntroductionView currentUniversity={ratedPoi} />
+                ) : (
+                  <div />
+                )
               ) : pageCount < maxPages - 1 ? (
                 <RatingView
                   currentPage={rating.categorieRatings[pageCount]}
@@ -309,6 +211,7 @@ export default function RatingModal(props: ResultProps) {
                   setPageText={setPageRatingText}
                   addTag={addTag}
                   removeTag={removeTag}
+                  handleFollowUp={handleFollowUpQuestions}
                 />
               ) : (
                 <FinishView />
@@ -330,9 +233,9 @@ export default function RatingModal(props: ResultProps) {
                     onClick={
                       pageCount === maxPages - 2
                         ? () => {
-                          setPageCount( pageCount + 1);
-                          dispatch(addRating(rating));
-                        }
+                            setPageCount(pageCount + 1);
+                            dispatch(addRating(rating));
+                          }
                         : handleNext
                     }
                     disabled={pageCount === maxPages - 1}

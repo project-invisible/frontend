@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { PointOfInterest } from "../types/PointOfInterest";
 import { getRatingsForPoi } from "./RatingReducer";
-import { Rating, RatingOptions } from "./../types/Rating";
+import { Rating, RatingOptions, Question } from "./../types/Rating";
 import Face from "@material-ui/icons/Face";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import IconButton from "@material-ui/core/IconButton";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Card,
   CardContent,
@@ -18,15 +19,16 @@ import {
 import ReportIcon from "@material-ui/icons/Report";
 import { postRatingReport } from "./../admin/AdminReducer";
 import { RatingReport } from "../types/Reports";
-import { useDispatch, useSelector } from "react-redux";
 import { User } from "./../types/User";
 import { useHistory } from "react-router-dom";
+import { getCurrentUser } from "./../user/UserReducer";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       overflowY: "auto",
-      width: 400
+      width: 400,
+      maxHeight: "32rem"
     },
     rating: {
       marginTop: "0.5em"
@@ -52,6 +54,18 @@ const useStyles = makeStyles((theme: Theme) =>
       "&:hover": {
         cursor: "pointer"
       }
+    },
+    "@global": {
+      "*::-webkit-scrollbar": {
+        width: "0.4em"
+      },
+      "*::-webkit-scrollbar-track": {
+        "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)"
+      },
+      "*::-webkit-scrollbar-thumb": {
+        backgroundColor: "rgba(0,0,0,.1)",
+        outline: "1px solid slategrey"
+      }
     }
   })
 );
@@ -67,6 +81,12 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
   const dispatch = useDispatch();
   const user: User = useSelector((state: any) => state.registerStore.user);
   const history = useHistory();
+  const currentUser: User = useSelector(
+    (state: any) => state.userStore.fetchedUser
+  );
+  const questions: Question[] = useSelector(
+    (state: any) => state.ratingStore.questions
+  );
 
   const reportRating = () => {
     if (user) {
@@ -80,6 +100,10 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
       dispatch(postRatingReport(ratingReport));
     }
   };
+
+  useEffect(() => {
+    dispatch(getCurrentUser(rating.userId));
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -106,7 +130,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                 history.push({
                   pathname: "/user",
                   state: {
-                    userId: rating.user.id
+                    userId: rating.userId
                   }
                 });
               }}
@@ -116,20 +140,32 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
               </Grid>
               <Grid item xs={11}>
                 <Typography variant="body2" component="p">
-                  {rating.user.email}
+                  {currentUser.email}
                 </Typography>
               </Grid>
             </Grid>
-            <IconButton onClick={() => reportRating()}>
-              <Typography variant="body2" component="p">
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => reportRating()}
+            >
+              <Typography
+                className={classes.iconText}
+                variant="body2"
+                component="p"
+              >
                 {user ? `Report rating` : `Login to report rating`}
               </Typography>
               <ReportIcon />
             </IconButton>
-            <Typography variant="body2">
-              General comment: {rating.generalComment}
-            </Typography>
+            {rating.generalComment && (
+              <Typography variant="body2">
+                General comment: {rating.generalComment}
+              </Typography>
+            )}
             {rating.categorieRatings.map((categorieRating, index) => {
+              const question = questions.find(
+                question => question.id === categorieRating.questionId
+              );
               return (
                 <div>
                   <Divider className={classes.divider} />
@@ -137,7 +173,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                     variant="subtitle2"
                     className={classes.questionText}
                   >
-                    {categorieRating.question.text}
+                    {question.text}
                   </Typography>
                   <RadioGroup
                     aria-label="answer"
@@ -154,6 +190,11 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                       <Typography variant="body2">Answer: Undecided</Typography>
                     )}
                   </RadioGroup>
+                  {categorieRating.comment && (
+                    <Typography variant="body2">
+                      {`Comment: ${categorieRating.comment}`}
+                    </Typography>
+                  )}
                   {categorieRating.tag.length > 0 && (
                     <div>
                       Tags:

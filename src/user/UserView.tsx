@@ -62,7 +62,7 @@ function UserView() {
                   {`Phone: ${currentUser.contact.phone}`}
                 </Typography>
               )}
-            {id && userId !== id && (
+            {(id && userId !== id) && (
               <div>
                 <IconButton
                   edge="end"
