@@ -13,7 +13,7 @@ import {
   CardActions
 } from "@material-ui/core";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
-import IconButton  from '@material-ui/core/IconButton';
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,6 +22,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     rating: {
       marginTop: "0.5em"
+    },
+    iconButton: {
+      borderRadius: "15px",
+      marginBottom: "5px",
+      padding: "8px"
+    },
+    iconText: {
+      marginRight: "5px"
+    },
+    noComment: {
+      color: "rgba(0, 0, 0, 0.54)"
     }
   })
 );
@@ -46,9 +57,9 @@ export default function RatingShortView(props: RatingShortViewProps) {
     dispatch(getRatingsForPoi(detail.id));
   }, []);
 
-  useEffect( () => {
+  useEffect(() => {
     dispatch(getRatingsForPoi(detail.id));
-  }, [poi])
+  }, [poi]);
 
   return (
     <div className={classes.root}>
@@ -62,21 +73,36 @@ export default function RatingShortView(props: RatingShortViewProps) {
                     <Face />
                   </Grid>
                   <Grid item xs={11}>
-                    <Typography variant="body2" component="p">
+                    {/* <Typography variant="body2" component="p">
                       {rating.userId}
-                    </Typography>
+                    </Typography> */}
                   </Grid>
                 </Grid>
-                <div>{rating.generalComment}</div>
+                {rating.generalComment ? (
+                  <Typography variant="body2">
+                    {rating.generalComment}
+                  </Typography>
+                ) : (
+                  <Typography variant="body2" className={classes.noComment}>
+                    The user left no general comment
+                  </Typography>
+                )}
               </div>
             </CardContent>
             <CardActions>
               <div>
-                <IconButton onClick={() => setDetailRating(rating)}>
-                  <Typography variant="body2" component="p">
-                       View more 
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => setDetailRating(rating)}
+                >
+                  <Typography
+                    className={classes.iconText}
+                    variant="body2"
+                    component="p"
+                  >
+                    View more
                   </Typography>
-                    <KeyboardArrowRight />
+                  <KeyboardArrowRight />
                 </IconButton>
               </div>
             </CardActions>
