@@ -11,6 +11,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import { createBrowserHistory } from "history";
 import { Role } from "../types/User";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,24 +23,31 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1
   },
-
+  buttonColor: {
+    color: "white",
+    fontSize: "1.5rem",
+    fontWeight: 500,
+    lineHeight: 1.75
+  },
   header: {
-    background: 'linear-gradient(-90deg, #FF66c4, #509CFE)'
+    background: "linear-gradient(-90deg, #FF66c4, #509CFE)"
   }
 }));
 
-const history = createBrowserHistory({ forceRefresh: true });
-
 function Navigationbar() {
   const classes = useStyles({});
+  const history = useHistory();
   const role: Role = useSelector((state: any) => state.registerStore.userGroup);
   const email: string = useSelector((state: any) => state.registerStore.email);
+  const id: number = useSelector((state: any) => state.registerStore.id);
 
   return (
     <AppBar position="static" className={classes.header}>
       <Toolbar>
-        <Typography variant="h6" className={classes.title}>
-          IN_VISIBLE
+        <Typography className={classes.title} variant="h6">
+          <Button color="primary" onClick={() => history.push("/")} className={classes.buttonColor}>
+            IN_VISIBLE
+          </Button>
         </Typography>
         <Button color="inherit" onClick={() => history.push("/")}>
           Map
@@ -54,18 +62,32 @@ function Navigationbar() {
         <Button color="inherit" onClick={() => history.push("/faq")}>
           FAQ
         </Button>
-        <Button color="inherit">Feedback</Button>
+        <Button color="inherit" onClick={() => history.push("/feedback")}>
+          Feedback
+        </Button>
         {(role === Role.ADMIN || role === Role.MODERATOR) && (
-          <Button color="inherit">Admin</Button>
+          <Button color="inherit" onClick={() => history.push("/admin")}>
+            Admin
+          </Button>
         )}
-        <IconButton
-          className={classes.profileButton}
-          color="inherit"
-          aria-label="account of current user"
-          aria-controls="menu-appbar"
-        >
-          <AccountCircle />
-        </IconButton>
+        {id && (
+          <IconButton
+            className={classes.profileButton}
+            color="inherit"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            onClick={() => {
+              history.push({
+                pathname: "/user",
+                state: {
+                  userId: id
+                }
+              });
+            }}
+          >
+            <AccountCircle />
+          </IconButton>
+        )}
         {email && email !== "" ? (
           <Typography variant="body2">{email}</Typography>
         ) : (

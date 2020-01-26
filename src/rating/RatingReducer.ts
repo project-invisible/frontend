@@ -50,7 +50,7 @@ const ratingStore = (state = initialState, action) => {
 export const addRating = (rating: Rating) => async (dispatch, getState) => {
   const body = JSON.stringify(rating);
   try {
-    const response = await fetch(`http://localhost:8182/rating`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/rating`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body
@@ -90,7 +90,7 @@ export const getRatingsForPoi = (poiId: number) => async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:8182/rating/newest/${poiId}`
+      `${process.env.REACT_APP_BACKEND_URL}/rating/newest/${poiId}`
     );
     const result = await response.json();
     dispatch({

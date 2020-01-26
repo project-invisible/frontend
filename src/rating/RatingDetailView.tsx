@@ -16,12 +16,18 @@ import {
   Divider,
   RadioGroup
 } from "@material-ui/core";
+import ReportIcon from "@material-ui/icons/Report";
+import { postRatingReport } from "./../admin/AdminReducer";
+import { RatingReport } from "../types/Reports";
+import { useDispatch, useSelector } from "react-redux";
+import { User } from "./../types/User";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       overflowY: "auto",
-      width: 400,
+      width: 400
     },
     rating: {
       marginTop: "0.5em"
@@ -34,6 +40,19 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     questionText: {
       fontWeight: 600
+    },
+    iconButton: {
+      borderRadius: "15px",
+      marginBottom: "5px",
+      padding: "8px"
+    },
+    iconText: {
+      marginRight: "5px"
+    },
+    account: {
+      "&:hover": {
+        cursor: "pointer"
+      }
     }
   })
 );
@@ -46,22 +65,56 @@ export interface RatingDetailViewProps {
 export default function RatingDetailView(props: RatingDetailViewProps) {
   const classes = useStyles({});
   const { rating, setDetailRating } = props;
+  const dispatch = useDispatch();
+  const user: User = useSelector((state: any) => state.registerStore.user);
+  const history = useHistory();
   const questions: Question[] = useSelector(
     (state: any) => state.ratingStore.questions
   );
+
+  const reportRating = () => {
+    if (user) {
+      const ratingReport: RatingReport = {
+        id: null,
+        reportingUser: user,
+        rating,
+        reportDate: null,
+        solved: false
+      };
+      dispatch(postRatingReport(ratingReport));
+    }
+  };
 
   return (
     <div className={classes.root}>
       <Card className={classes.rating}>
         <CardContent>
-          <IconButton onClick={() => setDetailRating(null)}>
-            <Typography variant="body2" component="p">
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => setDetailRating(null)}
+          >
+            <KeyboardArrowLeft />
+            <Typography
+              className={classes.iconText}
+              variant="body2"
+              component="p"
+            >
               Go back
             </Typography>
-            <KeyboardArrowLeft />
           </IconButton>
           <div>
-            <Grid container>
+            <Grid
+              container
+              className={classes.account}
+              onClick={() => {
+                history.push({
+                  pathname: "/user",
+                  state: {
+                    userId: rating.user.id
+                  }
+                });
+              }}
+            >
               <Grid item xs={1}>
                 <Face />
               </Grid>
@@ -71,7 +124,15 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                 </Typography>
               </Grid>
             </Grid>
-            <Typography variant="body2">General comment: {rating.generalComment}</Typography>
+            <IconButton onClick={() => reportRating()}>
+              <Typography variant="body2" component="p">
+                {user ? `Report rating` : `Login to report rating`}
+              </Typography>
+              <ReportIcon />
+            </IconButton>
+            <Typography variant="body2">
+              General comment: {rating.generalComment}
+            </Typography>
             {rating.categorieRatings.map((categorieRating, index) => {
               const question = questions.find( question => question.id === categorieRating.questionId);
               return (

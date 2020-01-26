@@ -1,15 +1,17 @@
 import { PointOfInterest } from "./../types/PointOfInterest";
+import { CultureEntry } from "./../types/CultureEntry";
 
 export const SEARCH_POI = "SEARCH_POI";
 export const SEARCH_ENTRY = "SEARCH_ENTRY";
 export const GET_POIS = "GET_POIS";
 export const GET_ENTRIES = "GET_ENTRIES";
 export const TOGGLE_SEARCH_LOADING = "TOGGLE_SEARCH_LOADING";
+export const TOGGLE_ENTRY_SEARCH_LOADING = "TOGGLE_ENTRY_SEARCH_LOADING";
+export const TOGGLE_RESET = "TOGGLE_RESET";
+export const RESET_SEARCH = "RESET_SEARCH";
 
-export const TOGGLE_RESET = 'TOGGLE_RESET'
-export const RESET_SEARCH = 'RESET_SEARCH'
 const initialState = {
-    resetSearch: false,
+  resetSearch: false,
   searchResults: [],
   searchEntryResults: [],
   allPois: [],
@@ -17,7 +19,7 @@ const initialState = {
   finishedEntryLoading: false,
   finishedFirstLoading: 0,
   finishedSearchLoading: false,
-  finishedEntrySearchLoading: false,
+  finishedEntrySearchLoading: false
 };
 
 /**
@@ -34,7 +36,7 @@ const searchStore = (state = initialState, action) => {
     case SEARCH_ENTRY:
       return {
         ...state,
-        searchEntryResults: action.searchResults,
+        searchEntryResults: action.searchEntriesResults,
         finishedEntrySearchLoading: true
       };
     case GET_POIS:
@@ -55,18 +57,25 @@ const searchStore = (state = initialState, action) => {
         ...state,
         finishedSearchLoading: action.toggleLoading
       };
-        case TOGGLE_RESET: 
-          return {
-            ...state,
-            resetSearch: action.toggleReset,
-          }
-        case RESET_SEARCH:
-          return {
-            ...state,
-            searchResults: [],
-            finishedSearchLoading: false,
-            resetSearch: true,
-          }
+    case TOGGLE_RESET:
+      return {
+        ...state,
+        resetSearch: action.toggleReset
+      };
+    case RESET_SEARCH:
+      return {
+        ...state,
+        searchResults: [],
+        searchEntryResults: [],
+        finishedEntrySearchLoading: false,
+        finishedSearchLoading: false,
+        resetSearch: true
+      };
+    case TOGGLE_ENTRY_SEARCH_LOADING: 
+      return {
+        ...state,
+        finishedEntrySearchLoading: action.toggleLoading
+      }
   }
   return state;
 };
@@ -77,7 +86,7 @@ const searchStore = (state = initialState, action) => {
 export const searchPOI = (query: string) => async (dispatch, getState) => {
   try {
     const response = await fetch(
-      `http://localhost:8182/poi/search?query=${query}`,
+      `${process.env.REACT_APP_BACKEND_URL}/poi/search?query=${query}`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" }
@@ -97,15 +106,15 @@ export const searchPOI = (query: string) => async (dispatch, getState) => {
 export const searchEntries = (query: string) => async (dispatch, getState) => {
   try {
     const response = await fetch(
-      `http://localhost:8182/entry/search?query=${query}`,
+      `${process.env.REACT_APP_BACKEND_URL}/entry/search?query=${query}`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" }
       }
     );
-    const searchEntriesResults: Array<PointOfInterest> = await response.json();
+    const searchEntriesResults: Array<CultureEntry> = await response.json();
     dispatch({
-      type: SEARCH_POI,
+      type: SEARCH_ENTRY,
       searchEntriesResults
     });
   } catch (error) {
@@ -128,33 +137,51 @@ export const toggleSearchLoading = (toggleLoading: boolean) => async (
     throw error;
   }
 };
-  export const toggleResetSearch = (toggleReset: boolean ) => async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: TOGGLE_RESET,
-        toggleReset,
-      })
-    } catch (error) {
-        console.log("throwing Error", error);
-        throw error;
-    }
-  };
 
-  export const resetSearch = () => async (dispatch, getState) => {
-    try {
-      dispatch({
-        type: RESET_SEARCH,
-      })
-    } catch (error) {
-        console.log("throwing Error", error);
-        throw error;
-    }
-  };
+export const toggleEntrySearchLoading = (toggleLoading: boolean) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: TOGGLE_ENTRY_SEARCH_LOADING,
+      toggleLoading
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
 
+export const toggleResetSearch = (toggleReset: boolean) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: TOGGLE_RESET,
+      toggleReset
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
+
+export const resetSearch = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: RESET_SEARCH
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
 
 export const getAllPOIs = () => async (dispatch, getState) => {
   try {
-    const response = await fetch(`http://localhost:8182/poi`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/poi`);
     const body = await response.json();
     const pois = body;
     dispatch({
@@ -169,7 +196,7 @@ export const getAllPOIs = () => async (dispatch, getState) => {
 
 export const getAllEntries = () => async (dispatch, getState) => {
   try {
-    const response = await fetch(`http://localhost:8182/entry`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/entry`);
     const body = await response.json();
     const entries = body;
     dispatch({
