@@ -125,7 +125,7 @@ export const getUser = (userId: number) => async (dispatch, getState) => {
     const response = await fetch(`http://localhost:8182/user/${userId}`);
     const result = await response.json();
     dispatch({
-      type: LOGIN,
+      type: GET_USER,
       result
     });
   } catch (error) {

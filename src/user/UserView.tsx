@@ -21,7 +21,6 @@ function UserView() {
   let currentUser: User = userId && userId !== id ? fetchedUser : user;
 
   useEffect(() => {
-    console.log(location);
     if (userId && userId !== id) {
       dispatch(getCurrentUser(userId));
     }

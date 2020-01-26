@@ -11,6 +11,7 @@ import Mapathon from './staticContent/Mapathon';
 import AdminView from './admin/AdminView';
 import UserView from './user/UserView';
 import { useSelector } from 'react-redux';
+import FeedbackView from './user/FeedbackView';
 
 const history = createBrowserHistory();
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" component={() => <Navigationbar />} />
       </Switch>
         <Route exact path="/" component={() => <HomeMap />} />
+        <Route exact path="/feedback" component={() => <FeedbackView />} />
         <Route exact path="/user" component={() => <UserView/>} />
         <Route exact path="/admin" component={() => <AdminView />} />
         <Route path="/codeofconduct" component={() => <CodeOfConduct />} />

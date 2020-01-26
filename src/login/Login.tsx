@@ -51,7 +51,7 @@ function Register() {
   };
 
   useEffect(() => {
-    if (token !== "" && token !== null) {
+    if (token !== "" && token !== null && id) {
       history.push("");
       dispatch(getUser(id));
     }

@@ -1,8 +1,10 @@
 import { SearchResult } from "../types/SearchResult";
 import { Search } from "history";
 import { PointOfInterest } from "../types/PointOfInterest";
+import { Feedback } from './../types/Reports';
 
 export const GET_USER = "GET_USER";
+export const SEND_FEEDBACK = "SEND_FEEDBACK";
 
 const initialState = {
   fetchedUser: {},
@@ -14,6 +16,8 @@ const userStore = (state = initialState, action) => {
   switch (action.type) {
     case GET_USER:
       state.fetchedUser = action.user;
+      return state;
+    case SEND_FEEDBACK: 
       return state;
   }
   return state;
@@ -33,6 +37,27 @@ export const getCurrentUser = (
     dispatch({
       type: GET_USER,
       user
+    });
+  } catch (error) {
+    console.log("throwing Error", error);
+    throw error;
+  }
+};
+
+export const sendFeedback = (feedback: Feedback) => async dispatch => {
+  try {
+    const body = JSON.stringify(feedback);
+    const response = await fetch(
+      `http://localhost:8182/feedback`,
+      {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body
+      }
+    );
+    const result = await response.json();
+    dispatch({
+      type: SEND_FEEDBACK
     });
   } catch (error) {
     console.log("throwing Error", error);

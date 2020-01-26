@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper
     },
     lists: {
-        margin: '1em'
+      margin: "1em"
     }
   })
 );
@@ -55,89 +55,101 @@ function AdminView() {
   return (
     <div className={classes.root}>
       <div className={classes.lists}>
-        <Grid item xs={12} md={6}>
-          <Typography variant="h6">Reported users:</Typography>
-          <div>
-            <List dense>
-              {reportedUsers &&
-                reportedUsers.map(report => {
-                  return (
-                    <ListItem>
-                      <ListItemText primary="Single-line item">
-                        <Typography variant="body2">
-                          {report.reportedUser}
-                        </Typography>
-                      </ListItemText>
-                      <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  );
-                })}
-              <Divider variant="inset" component="li" />
-            </List>
-          </div>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Typography variant="h6">Reported ratings:</Typography>
-          <div>
-            <List dense>
-              {reportedRatings &&
-                reportedRatings.map(rating => {
-                  return (
-                    <ListItem>
-                      <ListItemText primary="Single-line item">
-                        <Typography variant="body2">
-                          {rating.rating.generalComment}
-                        </Typography>
-                      </ListItemText>
-                      <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  );
-                })}
-              <Divider variant="inset" component="li" />
-            </List>
-          </div>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Typography variant="h6">Feedback:</Typography>
-          <div>
-            <List dense>
-              {feedback &&
-                feedback.map((feedbackItem, index) => {
-                  return (
-                    <ListItem key={`feedback-${index}`}>
-                      <ListItemText
-                        primary={
-                          <React.Fragment>
-                            <Typography
-                              component="span"
-                              variant="body2"
-                              color="textPrimary"
-                            >
-                              {feedbackItem.message}
+        {reportedUsers && reportedUsers.length > 0 && (
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Reported users:</Typography>
+            <div>
+              <List dense>
+                {reportedUsers &&
+                  reportedUsers.map(report => {
+                    return (
+                      <div>
+                        <ListItem>
+                          <ListItemText primary="Single-line item">
+                            <Typography variant="body2">
+                              {report.reportedUser}
                             </Typography>
-                          </React.Fragment>
-                        }
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  );
-                })}
-              <Divider variant="inset" component="li" />
-            </List>
-          </div>
-        </Grid>
+                          </ListItemText>
+                          <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="delete">
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                      </div>
+                    );
+                  })}
+              </List>
+            </div>
+          </Grid>
+        )}
+        {reportedRatings && reportedRatings.length > 0 && (
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Reported ratings:</Typography>
+            <div>
+              <List dense>
+                {reportedRatings &&
+                  reportedRatings.map(rating => {
+                    return (
+                      <div>
+                        <ListItem>
+                          <ListItemText primary="Single-line item">
+                            <Typography variant="body2">
+                              {rating.rating.generalComment}
+                            </Typography>
+                          </ListItemText>
+                          <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="delete">
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                      </div>
+                    );
+                  })}
+              </List>
+            </div>
+          </Grid>
+        )}
+        {feedback && feedback.length > 0 && (
+          <Grid item xs={12} md={6}>
+            <Typography variant="h6">Feedback:</Typography>
+            <div>
+              <List dense>
+                {feedback &&
+                  feedback.map((feedbackItem, index) => {
+                    return (
+                      <div>
+                        <ListItem key={`feedback-${index}`}>
+                          <ListItemText
+                            primary={
+                              <React.Fragment>
+                                <Typography
+                                  component="span"
+                                  variant="body2"
+                                  color="textPrimary"
+                                >
+                                  {feedbackItem.message}
+                                </Typography>
+                              </React.Fragment>
+                            }
+                          />
+                          <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="delete">
+                              <DeleteIcon />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                        <Divider variant="inset" component="li" />
+                      </div>
+                    );
+                  })}
+              </List>
+            </div>
+          </Grid>
+        )}
       </div>
     </div>
   );

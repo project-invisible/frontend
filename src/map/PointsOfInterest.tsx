@@ -133,7 +133,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
                   icon={markerIcon}
                   onClick={() => 
                     showDetails && poi.id === detail.id
-                      ? dispatch(toggleEntryDetailView(false))
+                      ? dispatch(closeDetailView(false))
                       : openEntryDetailView(poi.id)
                   }
                 >
