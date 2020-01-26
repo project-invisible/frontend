@@ -12,7 +12,7 @@ export interface Rating {
 
 export interface CategoryRating {
     id: number,
-    question: Question,
+    questionId: number,
     rating: RatingOptions,
     comment: string,
     tag: string[],
@@ -21,8 +21,8 @@ export interface CategoryRating {
 export interface Question {
     id: number,
     text: string,
-    category: Category,
-    subCategory: SubCategory,
+    categoryId: number,
+    subCategoryId: number,
     hasCheckbox: boolean;
     followUpQuestion: number[],
 }

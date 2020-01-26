@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { PointOfInterest } from "../types/PointOfInterest";
 import { getRatingsForPoi } from "./RatingReducer";
-import { Rating, RatingOptions } from "./../types/Rating";
+import { Rating, RatingOptions, Question } from "./../types/Rating";
 import Face from "@material-ui/icons/Face";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import IconButton from "@material-ui/core/IconButton";
+import { useSelector } from 'react-redux';
 import {
   Card,
   CardContent,
@@ -45,6 +46,9 @@ export interface RatingDetailViewProps {
 export default function RatingDetailView(props: RatingDetailViewProps) {
   const classes = useStyles({});
   const { rating, setDetailRating } = props;
+  const questions: Question[] = useSelector(
+    (state: any) => state.ratingStore.questions
+  );
 
   return (
     <div className={classes.root}>
@@ -69,6 +73,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
             </Grid>
             <Typography variant="body2">General comment: {rating.generalComment}</Typography>
             {rating.categorieRatings.map((categorieRating, index) => {
+              const question = questions.find( question => question.id === categorieRating.questionId);
               return (
                 <div>
                   <Divider className={classes.divider} />
@@ -76,7 +81,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                     variant="subtitle2"
                     className={classes.questionText}
                   >
-                    {categorieRating.question.text}
+                    {question.text}
                   </Typography>
                   <RadioGroup
                     aria-label="answer"

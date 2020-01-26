@@ -79,7 +79,7 @@ export default function RatingModal(props: ResultProps) {
         id: null,
         rating: RatingOptions.YES,
         tag: [],
-        question
+        questionId: question.id
       };
       categorieRatings.push(categorieRating);
     });
@@ -133,7 +133,7 @@ export default function RatingModal(props: ResultProps) {
   const checkFollowUpQuestions = (increment: number, direction: number) => {
     if (
       followUpQuestions.includes(
-        rating.categorieRatings[pageCount + increment].question.id
+        rating.categorieRatings[pageCount + increment].questionId
       )
     ) {
       checkFollowUpQuestions(increment + direction, direction);
@@ -143,9 +143,10 @@ export default function RatingModal(props: ResultProps) {
   };
 
   const handleFollowUpQuestions = (selectedRating: RatingOptions) => {
+    const question = questions.find(question => question.id === rating.categorieRatings[pageCount].questionId);
     if (!(selectedRating === RatingOptions.YES)) {
-      if (rating.categorieRatings[pageCount].question.followUpQuestion) {
-        rating.categorieRatings[pageCount].question.followUpQuestion.forEach(
+      if (question.followUpQuestion) {
+        question.followUpQuestion.forEach(
           followUpId => {
             setFollowUpQuestions(oldArray => [...oldArray, followUpId]);
           }

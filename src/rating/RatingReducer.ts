@@ -9,7 +9,9 @@ const initialState = {
   rating: [],
   modalOpen: false,
   ratingsForPoi: [],
-  questions: []
+  questions: [],
+  categories: [],
+  subCategories: []
 };
 
 /**
@@ -34,7 +36,9 @@ const ratingStore = (state = initialState, action) => {
     case GET_QUESTIONS:
       return {
         ...state,
-        questions: action.result.questions
+        questions: action.result.questions,
+        categories: action.result.categories,
+        subCategories: action.result.subCategories
       }
   }
   return state;
