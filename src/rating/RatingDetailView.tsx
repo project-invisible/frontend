@@ -144,19 +144,6 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                 </Typography>
               </Grid>
             </Grid>
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => reportRating()}
-            >
-              <Typography
-                className={classes.iconText}
-                variant="body2"
-                component="p"
-              >
-                {user ? `Report rating` : `Login to report rating`}
-              </Typography>
-              <ReportIcon />
-            </IconButton>
             {rating.generalComment && (
               <Typography variant="body2">
                 General comment: {rating.generalComment}
@@ -213,6 +200,19 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                 </div>
               );
             })}
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => reportRating()}
+            >
+              <Typography
+                className={classes.iconText}
+                variant="body2"
+                component="p"
+              >
+                {user ? `Report rating` : `Login to report rating`}
+              </Typography>
+              <ReportIcon />
+            </IconButton>
           </div>
         </CardContent>
       </Card>
