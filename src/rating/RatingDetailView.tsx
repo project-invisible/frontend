@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { PointOfInterest } from "../types/PointOfInterest";
-import { getRatingsForPoi } from "./RatingReducer";
+import { getRatingsForPoi, getQuestions } from "./RatingReducer";
 import { Rating, RatingOptions, Question } from "./../types/Rating";
 import Face from "@material-ui/icons/Face";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -103,6 +102,9 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
 
   useEffect(() => {
     dispatch(getCurrentUser(rating.userId));
+    if (questions === undefined || questions.length == 0) {
+      dispatch(getQuestions());
+    }
   }, []);
 
   return (
@@ -160,7 +162,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                     variant="subtitle2"
                     className={classes.questionText}
                   >
-                    {question.text}
+                    {question && question.text}
                   </Typography>
                   <RadioGroup
                     aria-label="answer"

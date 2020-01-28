@@ -98,8 +98,10 @@ const CultureEntries = forwardRef((props: CultureEntriesProps, ref) => {
     const entries =
       searchResults && searchResults.length > 0 ? searchResults : allEntries;
     const tempMarkers = entries.filter(entry => {
-      const coordinates: LatLngExpression = [entry.coords.y, entry.coords.x];
-      return map.getBounds().contains(coordinates);
+      if (entry.coords) {
+        const coordinates: LatLngExpression = [entry.coords.y, entry.coords.x];
+        return map.getBounds().contains(coordinates);
+      } else return false;
     });
     setFilteredMarkers(tempMarkers);
   };
