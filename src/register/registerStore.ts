@@ -122,7 +122,7 @@ export const loginUser = (email: String, password: String) => async (
 
 export const getUser = (userId: number) => async (dispatch, getState) => {
   try {
-    const response = await fetch(`http://localhost:8182/user/${userId}`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}`);
     const result = await response.json();
     dispatch({
       type: GET_USER,

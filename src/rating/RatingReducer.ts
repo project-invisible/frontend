@@ -71,7 +71,7 @@ export const getQuestions = () => async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:8182/criteria`
+      `${process.env.REACT_APP_BACKEND_URL}/criteria`
     );
     const result = await response.json();
     dispatch({
