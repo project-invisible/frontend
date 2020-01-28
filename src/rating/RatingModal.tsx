@@ -180,7 +180,7 @@ export default function RatingModal(props: ResultProps) {
             checkLoginOpenModal();
           }}
         >
-          Rate
+          Assess your needs
         </Button>
       </CardActions>
       <Modal

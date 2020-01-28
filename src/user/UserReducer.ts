@@ -31,7 +31,7 @@ export const getCurrentUser = (
   id: number
 ) => async dispatch => {
   try {
-    const response = await fetch(`http://localhost:8182/user/${id}`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/user/${id}`);
     const body = await response.json();
     const user = body;
     dispatch({
@@ -48,7 +48,7 @@ export const sendFeedback = (feedback: Feedback) => async dispatch => {
   try {
     const body = JSON.stringify(feedback);
     const response = await fetch(
-      `http://localhost:8182/feedback`,
+      `${process.env.REACT_APP_BACKEND_URL}/feedback`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" },

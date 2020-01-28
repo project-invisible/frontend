@@ -49,7 +49,7 @@ const adminStore = (state = initialState, action) => {
  */
 export const getReportedUsers = () => async dispatch => {
   try {
-    const response = await fetch(`http://localhost:8182/userReport`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/userReport`);
     const body = await response.json();
     dispatch({
       type: GET_REPORTED_USERS,
@@ -65,7 +65,7 @@ export const postUserReport = (userReport: UserReport) => async dispatch => {
   try {
     const body = JSON.stringify(userReport);
     const response = await fetch(
-      `http://localhost:8182/userReport`,
+      `${process.env.REACT_APP_BACKEND_URL}/userReport`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -84,7 +84,7 @@ export const postUserReport = (userReport: UserReport) => async dispatch => {
 
 export const getReportedRatings = () => async dispatch => {
   try {
-    const response = await fetch(`http://localhost:8182/ratingReport`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/ratingReport`);
     const body = await response.json();
     dispatch({
       type: GET_REPORTED_RATINGS,
@@ -100,7 +100,7 @@ export const postRatingReport = (ratingReport: RatingReport) => async dispatch =
   try {
     const body = JSON.stringify(ratingReport);
     const response = await fetch(
-      `http://localhost:8182/ratingReport`,
+      `${process.env.REACT_APP_BACKEND_URL}/ratingReport`,
       {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -119,7 +119,7 @@ export const postRatingReport = (ratingReport: RatingReport) => async dispatch =
 
 export const getFeedback = () => async dispatch => {
   try {
-    const response = await fetch(`http://localhost:8182/feedback`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/feedback`);
     const body = await response.json();
     dispatch({
       type: GET_FEEDBACK,
