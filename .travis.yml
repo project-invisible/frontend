@@ -1,10 +1,9 @@
-sudo: true
 language: node_js
 node_js:
-- stable
+  - "stable"
 cache:
   directories:
-  - node_modules
+    - node_modules
 script:
 - npm install
 - npm test
@@ -28,6 +27,3 @@ deploy:
   script: rsync -e "ssh -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/public travis@invisible.f4.htw-berlin.de:frontend
   on:
     branch: master
-
-
-

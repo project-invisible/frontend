@@ -1,17 +1,24 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import registerStore from './register/registerStore.tsx';
-import switchLayerStore from './map/SwitchLayerReducer.ts';
-import detailsStore from './map/DetailsReducer.ts';
-import searchStore from './map/SearchReducer.ts';
-
+import registerStore from './register/registerStore';
+import switchLayerStore from './map/SwitchLayerReducer';
+import detailsStore from './map/DetailsReducer';
+import searchStore from './map/SearchReducer';
+import ratingStore from './rating/RatingReducer';
+import entryDetailsStore from './entries/EntryDetailsReducer';
+import userStore from './user/UserReducer';
+import adminStore from './admin/AdminReducer';
 
 const store = createStore(
   combineReducers({
     registerStore,
     switchLayerStore,
     detailsStore,
-    searchStore
+    searchStore,
+    ratingStore,
+    entryDetailsStore,
+    userStore,
+    adminStore
   }),
   applyMiddleware(thunk)
 );

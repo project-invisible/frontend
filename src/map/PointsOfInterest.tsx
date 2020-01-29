@@ -1,45 +1,57 @@
 import React, {
-  Component,
   useEffect,
   forwardRef,
   useImperativeHandle,
   useState
 } from "react";
-import {
-  Map,
-  Marker,
-  Popup,
-  TileLayer,
-  Pane,
-  ZoomControl,
-  LayerGroup,
-  Circle,
-  useLeaflet
-} from "react-leaflet";
-import { LatLngExpression } from "leaflet";
+import { Marker, Popup, LayerGroup, useLeaflet } from "react-leaflet";
+import { LatLngExpression, Icon } from "leaflet";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPOIs } from "./SearchReducer";
-import detailsStore, { getDetails } from "./DetailsReducer";
+import {
+  getAllPOIs,
+  toggleSearchLoading,
+  toggleResetSearch
+} from "./SearchReducer";
+import { getDetails, closeDetailView } from "./DetailsReducer";
 import { PointOfInterest } from "../types/PointOfInterest";
+import MarkerClusterGroup from "react-leaflet-markercluster";
+import { toggleEntryDetailView } from "../entries/EntryDetailsReducer";
 
 const useStyles = makeStyles({});
 
 const PointsOfInterest = forwardRef((props, ref) => {
   const classes = useStyles({});
   const dispatch = useDispatch();
-
+  const { map } = useLeaflet();
+  const [initialLoad, setInitialLoad] = useState<boolean>(false);
   const [filteredMarkers, setFilteredMarkers] = useState<
     Array<PointOfInterest>
   >([]);
-  const [initialLoad, setInitialLoad] = useState<boolean>(false);
 
   const showDetails: boolean = useSelector(
     (state: any) => state.detailsStore.showDetails
   );
-
   const detail: PointOfInterest = useSelector(
     (state: any) => state.detailsStore.detailPOI
+  );
+  const finishedSearchLoading: boolean = useSelector(
+    (state: any) => state.searchStore.finishedSearchLoading
+  );
+  const searchResults: Array<PointOfInterest> = useSelector(
+    (state: any) => state.searchStore.searchResults
+  );
+  const poiChecked: boolean = useSelector(
+    (state: any) => state.switchLayerStore.poiChecked
+  );
+  const allPOIs: Array<PointOfInterest> = useSelector(
+    (state: any) => state.searchStore.allPois
+  );
+  const finishedFirstLoading: number = useSelector(
+    (state: any) => state.searchStore.finishedFirstLoading
+  );
+  const resetSearch: boolean = useSelector(
+    (state: any) => state.searchStore.resetSearch
   );
 
   useEffect(() => {
@@ -47,26 +59,43 @@ const PointsOfInterest = forwardRef((props, ref) => {
     updateMarkers();
   }, []);
 
-  const finishedFirstLoading: number = useSelector(
-    (state: any) => state.searchStore.finishedFirstLoading
-  );
+  useEffect(() => {
+    if (poiChecked) {
+      dispatch(getAllPOIs());
+      updateMarkers();
+    }
+  }, [poiChecked]);
+
   useEffect(() => {
     if (finishedFirstLoading === 1 && initialLoad === false) {
       updateMarkers();
       setInitialLoad(true);
+    } else if (
+      searchResults &&
+      searchResults.length > 0 &&
+      finishedSearchLoading
+    ) {
+      updateMarkers();
+      dispatch(toggleSearchLoading(false));
+    } else if (resetSearch) {
+      updateMarkers();
+      dispatch(toggleResetSearch(false));
     }
   });
 
-  const { map } = useLeaflet();
-  const allPOIs: Array<PointOfInterest> = useSelector(
-    (state: any) => state.searchStore.allPois
-  );
-  const searchResults: Array<PointOfInterest> = useSelector(
-    (state: any) => state.searchStore.searchResults
-  );
+  const markerIcon = new Icon({
+    iconUrl: require("../images/uni_icon.svg"),
+    shadowUrl: require("../images/marker-shadow.svg"),
+    iconSize: [38, 95],
+    shadowSize: [18, 47], // size of the shadow
+    shadowAnchor: [18, 47], // the same for the shadow
+    popupAnchor: [0, -15]
+  });
 
   const updateMarkers = () => {
-    const tempMarkers = allPOIs.filter(poi => {
+    const pois =
+      searchResults && searchResults.length > 0 ? searchResults : allPOIs;
+    const tempMarkers = pois.filter(poi => {
       const coordinates: LatLngExpression = [
         poi.coordinates.y,
         poi.coordinates.x
@@ -74,6 +103,11 @@ const PointsOfInterest = forwardRef((props, ref) => {
       return map.getBounds().contains(coordinates);
     });
     setFilteredMarkers(tempMarkers);
+  };
+
+  const openEntryDetailView = (entryId: number) => {
+    dispatch(getDetails(true, entryId));
+    dispatch(toggleEntryDetailView(false));
   };
 
   useImperativeHandle(ref, () => ({
@@ -85,49 +119,32 @@ const PointsOfInterest = forwardRef((props, ref) => {
   return (
     <>
       <LayerGroup>
-        {searchResults.length > 0 && map.getZoom() > 5 ? (
-          searchResults.map((poi, index) => {
-            const coordinates: LatLngExpression = [
-              poi.coordinates.y,
-              poi.coordinates.x
-            ];
-            return (
-              <Marker
-                key={index}
-                position={coordinates}
-                onClick={() =>
-                  showDetails
-                    ? dispatch(getDetails(!(poi.id === detail.id), poi.id))
-                    : dispatch(getDetails(true, poi.id))
-                }
-              >
-                <Popup>{poi.name}</Popup>
-              </Marker>
-            );
-          })
-        ) : allPOIs && map.getZoom() > 5 ? (
-          filteredMarkers.map((poi, index) => {
-            const coordinates: LatLngExpression = [
-              poi.coordinates.y,
-              poi.coordinates.x
-            ];
-            return (
-              <Marker
-                key={index}
-                position={coordinates}
-                onClick={() =>
-                  showDetails
-                    ? dispatch(getDetails(!(poi.id === detail.id), poi.id))
-                    : dispatch(getDetails(true, poi.id))
-                }
-              >
-                <Popup>{poi.name}</Popup>
-              </Marker>
-            );
-          })
-        ) : (
-          <div />
-        )}
+        <MarkerClusterGroup showCoverageOnHover={false}>
+          {filteredMarkers && map.getZoom() > 5 ? (
+            filteredMarkers.map((poi, index) => {
+              const coordinates: LatLngExpression = [
+                poi.coordinates.y,
+                poi.coordinates.x
+              ];
+              return (
+                <Marker
+                  key={index}
+                  position={coordinates}
+                  icon={markerIcon}
+                  onClick={() => 
+                    showDetails && poi.id === detail.id
+                      ? dispatch(closeDetailView(false))
+                      : openEntryDetailView(poi.id)
+                  }
+                >
+                  <Popup>{poi.name}</Popup>
+                </Marker>
+              );
+            })
+          ) : (
+            <div />
+          )}
+        </MarkerClusterGroup>
       </LayerGroup>
     </>
   );

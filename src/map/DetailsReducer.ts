@@ -34,7 +34,7 @@ export const getDetails = (
   id: number
 ) => async dispatch => {
   try {
-    const response = await fetch(`http://localhost:8182/poi/${id}`);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/poi/${id}`);
     const body = await response.json();
     const detail = body;
     dispatch({
