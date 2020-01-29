@@ -4,6 +4,8 @@ node_js:
 cache:
   directories:
     - node_modules
+services:
+  - docker
 script:
 - npm install
 - npm test
@@ -18,12 +20,9 @@ before_deploy:
 - chmod 600 /tmp/deploy_rsa
 - ssh-add /tmp/deploy_rsa
 
-after_success:
-- npm run build
-
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -e "ssh -o StrictHostKeyChecking=no" -r --delete-after --quiet $TRAVIS_BUILD_DIR/public travis@invisible.f4.htw-berlin.de:frontend
+  script: bash ./deploy.sh
   on:
     branch: master
