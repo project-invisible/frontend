@@ -117,10 +117,9 @@ function CodeOfConduct() {
       </Typography>
       <Typography variant="body1" className={classes.bodyText}>
         If you are being harassed by a member or guest, notice that someone else
-        is being harassed, or have any other concerns, please email the board at
-        admin@invisible.project
+        is being harassed, or have any other concerns, please use the feedback section. 
         <br />
-        The mail will then only be read by the administrator and treated
+        Your message will then only be read by the administrator and treated
         confidentially. If the person harassing you is part of the board, that
         person will not participate in the processing of your case. We will
         reply as soon as we can, but no later than one week later.

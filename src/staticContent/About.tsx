@@ -1,13 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Container,
-  Typography,
-  Card,
-  Paper,
-  CardMedia,
-  Grid
-} from "@material-ui/core";
+import { Typography, Card, Paper, CardMedia, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   textFrame: {
