@@ -12,6 +12,7 @@ import AdminView from './admin/AdminView';
 import UserView from './user/UserView';
 import { useSelector } from 'react-redux';
 import FeedbackView from './user/FeedbackView';
+import About from './staticContent/About';
 
 const history = createBrowserHistory();
 
@@ -32,6 +33,8 @@ function App() {
         <Route path="/codeofconduct" component={() => <CodeOfConduct />} />
         <Route path="/faq" component={() => <Faq />} />
         <Route path="/events" component={() => <Mapathon />} />
+        <Route path="/about" component={() => <About />} />
+
     </Router>
   );
 }

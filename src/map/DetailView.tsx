@@ -19,6 +19,7 @@ import { closeDetailView } from "./DetailsReducer";
 import { User } from "./../types/User";
 import { useHistory } from "react-router-dom";
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import { getUser } from "../register/registerStore";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,9 +43,16 @@ export default function DetailView() {
   const dispatch = useDispatch();
   const history = useHistory();
   const user: User = useSelector((state: any) => state.registerStore.user);
+  const id: number = useSelector((state: any) => state.registerStore.id);
   const detail: PointOfInterest = useSelector(
     (state: any) => state.detailsStore.detailPOI
   );
+
+  useEffect(() => {
+    if (user === undefined) {
+      dispatch(getUser(id));
+    }
+  }, []);
 
   useEffect(() => {
     setDetailRating(null);

@@ -142,7 +142,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
               </Grid>
               <Grid item xs={11}>
                 <Typography variant="body2" component="p">
-                  {currentUser.email}
+                  {currentUser && currentUser.email}
                 </Typography>
               </Grid>
             </Grid>
@@ -156,7 +156,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
                 question => question.id === categorieRating.questionId
               );
               return (
-                <div>
+                <div key={`rating-${index}`}>
                   <Divider className={classes.divider} />
                   <Typography
                     variant="subtitle2"
@@ -204,7 +204,7 @@ export default function RatingDetailView(props: RatingDetailViewProps) {
             })}
             <IconButton
               className={classes.iconButton}
-              onClick={() => reportRating()}
+              onClick={() => user ? reportRating() : history.push("/login")}
             >
               <Typography
                 className={classes.iconText}
