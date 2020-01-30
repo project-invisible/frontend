@@ -25,9 +25,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   tagline: {
-    flexGrow: 1,
-    marginLeft: "32px",
-    fontStyle: "oblique"
+    flexGrow: 1
   },
   buttonColor: {
     color: "white",
@@ -37,6 +35,12 @@ const useStyles = makeStyles(theme => ({
   },
   header: {
     background: "linear-gradient(-90deg, #FF66c4, #509CFE)"
+  },
+  learn: {
+    "&:hover": {
+      cursor: "pointer",
+      textDecoration: "none",
+    }
   }
 }));
 
@@ -53,11 +57,21 @@ function Navigationbar() {
         <Typography className={classes.title} variant="h6">
           <Button
             color="primary"
-            onClick={() => history.push("/about")}
+            onClick={() => history.push("/")}
             className={classes.buttonColor}
           >
             IN_VISIBLE
           </Button>
+        </Typography>
+        <Typography variant="subtitle1" className={classes.tagline}>
+          Mapping tool for trans*-, intersex and non-binary people
+          <Link
+            variant="subtitle1"
+            className={classes.learn}
+            onClick={() => history.push("/about")}
+          >
+            &nbsp; Learn more
+          </Link>
         </Typography>
         <Button color="inherit" onClick={() => history.push("/")}>
           Map
@@ -106,12 +120,6 @@ function Navigationbar() {
           </Button>
         )}
       </Toolbar>
-      <Typography variant="subtitle1" className={classes.tagline}>
-        Mapping tool for trans*-, intersex and non-binary people
-        <Link variant="subtitle1" onClick={() => history.push("/about")}>
-        &nbsp; Learn more
-        </Link>
-      </Typography>
     </AppBar>
   );
 }

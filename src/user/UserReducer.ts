@@ -3,7 +3,7 @@ import { Search } from "history";
 import { PointOfInterest } from "../types/PointOfInterest";
 import { Feedback } from './../types/Reports';
 
-export const GET_USER = "GET_USER";
+export const GET_CURRENT_USER = "GET_CURRENT_USER";
 export const SEND_FEEDBACK = "SEND_FEEDBACK";
 
 const initialState = {
@@ -14,7 +14,7 @@ const initialState = {
  */
 const userStore = (state = initialState, action) => {
   switch (action.type) {
-    case GET_USER:
+    case GET_CURRENT_USER:
       state.fetchedUser = action.user;
       return state;
     case SEND_FEEDBACK: 
@@ -35,7 +35,7 @@ export const getCurrentUser = (
     const body = await response.json();
     const user = body;
     dispatch({
-      type: GET_USER,
+      type: GET_CURRENT_USER,
       user
     });
   } catch (error) {
