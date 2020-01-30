@@ -137,7 +137,7 @@ const PointsOfInterest = forwardRef((props, ref) => {
                       : openEntryDetailView(poi.id)
                   }
                 >
-                  <Popup>{poi.name}</Popup>
+                  <Popup closeButton={false}>{poi.name}</Popup>
                 </Marker>
               );
             })

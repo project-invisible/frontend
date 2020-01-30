@@ -142,6 +142,7 @@ export default function RatingModal(props: ResultProps) {
     }
   };
 
+  // add id to questions that should be skipped
   const handleFollowUpQuestions = (selectedRating: RatingOptions) => {
     const question = questions.find(question => question.id === rating.categorieRatings[pageCount].questionId);
     if (!(selectedRating === RatingOptions.YES)) {

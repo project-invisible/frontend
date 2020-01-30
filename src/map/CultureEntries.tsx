@@ -141,12 +141,13 @@ const CultureEntries = forwardRef((props: CultureEntriesProps, ref) => {
                   key={`entry-${index}`}
                   icon={markerIcon}
                   position={coordinates}
-                  onClick=
-                  {() => showDetails && entry.id === detail.id
-                    ? dispatch(toggleEntryDetailView(false))
-                    : openEntryDetailView(entry.id)}
+                  onClick={() =>
+                    showDetails && entry.id === detail.id
+                      ? dispatch(toggleEntryDetailView(false))
+                      : openEntryDetailView(entry.id)
+                  }
                 >
-                  <Popup>{entry.name}</Popup>
+                  <Popup closeButton={false}>{entry.name}</Popup>
                 </Marker>
               );
             })
