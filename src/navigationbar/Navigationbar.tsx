@@ -5,7 +5,8 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Button
+  Button,
+  Link
 } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import { createBrowserHistory } from "history";
@@ -22,6 +23,11 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  tagline: {
+    flexGrow: 1,
+    marginLeft: "32px",
+    fontStyle: "oblique"
   },
   buttonColor: {
     color: "white",
@@ -45,7 +51,11 @@ function Navigationbar() {
     <AppBar position="static" className={classes.header}>
       <Toolbar>
         <Typography className={classes.title} variant="h6">
-          <Button color="primary" onClick={() => history.push("/")} className={classes.buttonColor}>
+          <Button
+            color="primary"
+            onClick={() => history.push("/about")}
+            className={classes.buttonColor}
+          >
             IN_VISIBLE
           </Button>
         </Typography>
@@ -96,6 +106,12 @@ function Navigationbar() {
           </Button>
         )}
       </Toolbar>
+      <Typography variant="subtitle1" className={classes.tagline}>
+        Mapping tool for trans*-, intersex and non-binary people
+        <Link variant="subtitle1" onClick={() => history.push("/about")}>
+        &nbsp; Learn more
+        </Link>
+      </Typography>
     </AppBar>
   );
 }
